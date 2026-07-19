@@ -1,5 +1,63 @@
 import mongoose from "mongoose";
 
+// ==============================
+// Message Schema
+// ==============================
+const messageSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      enum: ["system", "user", "assistant"],
+      required: true,
+    },
+
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    _id: false,
+    timestamps: true,
+  }
+);
+
+// ==============================
+// Generated File Schema
+// ==============================
+const generatedFileSchema = new mongoose.Schema(
+  {
+    path: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    content: {
+      type: String,
+      default: "",
+    },
+
+    type: {
+      type: String,
+      enum: ["file", "folder"],
+      default: "file",
+    },
+
+    language: {
+      type: String,
+      default: "",
+    },
+  },
+  {
+    _id: false,
+  }
+);
+
+// ==============================
+// Project Schema
+// ==============================
 const projectSchema = new mongoose.Schema(
   {
     title: {
@@ -24,17 +82,15 @@ const projectSchema = new mongoose.Schema(
       default: "react",
     },
 
-    generatedCode: {
-      type: String,
-      default: "",
+    messages: {
+      type: [messageSchema],
+      default: [],
     },
 
-    generatedFiles: [
-      {
-        fileName: String,
-        content: String,
-      },
-    ],
+    generatedFiles: {
+      type: [generatedFileSchema],
+      default: [],
+    },
 
     thumbnail: {
       type: String,
@@ -74,6 +130,9 @@ const projectSchema = new mongoose.Schema(
   }
 );
 
+// ==============================
+// Model
+// ==============================
 const Project =
   mongoose.models.Project ||
   mongoose.model("Project", projectSchema);
