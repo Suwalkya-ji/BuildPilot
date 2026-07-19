@@ -1,75 +1,42 @@
-import User from "../models/user.model.js";
-import bcrypt from "bcrypt";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
-export const signUpController = async (req, res) => {
-  try {
-    const { name, email, password, confirmPassword } = req.body;
+import {
+  registerService,
+  loginService,
+} from "../services/auth.service.js";
 
-    // Validation
-    if (!name || !email || !password || !confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide all required fields.",
-      });
-    }
+import {
+  validateRegister,
+  validateLogin,
+} from "../validations/auth.validation.js";
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+export const register = asyncHandler(async (req, res) => {
+  validateRegister(req.body);
 
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: "User already exists.",
-      });
-    }
+  const result = await registerService(req.body);
 
-    // Check password match
-    if (password !== confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Password and Confirm Password do not match.",
-      });
-    }
+  return res
+    .status(201)
+    .json(new ApiResponse(201, result, "User Registered Successfully"));
+});
 
-    // Check password length
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters long.",
-      });
-    }
+export const login = asyncHandler(async (req, res) => {
+  validateLogin(req.body);
 
-    // Hash Password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const result = await loginService(req.body);
 
-    // Create User
-    const newUser = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "Login Successful"));
+});
 
-    // Don't send password back
-    const userResponse = {
-      _id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt,
-    };
-
-    return res.status(201).json({
-      success: true,
-      message: "User created successfully.",
-      data: userResponse,
-    });
-  } catch (error) {
-    console.error("Error in SignUp Controller:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-    });
-  }
-};
+export const me = asyncHandler(async (req, res) => {
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      req.user,
+      "Current User"
+    )
+  );
+});

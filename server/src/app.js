@@ -5,6 +5,11 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 
+import authRoutes from "./routes/auth.routes.js";
+import errorHandler from "./middleware/error.middleware.js";
+
+import projectRoutes from "./routes/project.routes.js";
+
 const app = express();
 
 /*
@@ -47,5 +52,22 @@ app.get("/", (req, res) => {
     message: "🚀 BuildPilot Backend Running",
   });
 });
+
+/*
+===========================
+Routes
+===========================
+*/
+
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/projects", projectRoutes);
+
+/*
+===========================
+Error Handler
+===========================
+*/
+
+app.use(errorHandler);
 
 export default app;
