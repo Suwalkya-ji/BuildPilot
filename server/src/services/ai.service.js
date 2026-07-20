@@ -2,44 +2,22 @@ import groq from "../lib/groq.js";
 import Project from "../models/project.model.js";
 import ApiError from "../utils/ApiError.js";
 import { parseAIResponse } from "../utils/aiResponseParser.js";
+import { searchRelevantFiles } from "./rag.service.js";
+import { indexProjectFile,deleteProjectVectors} from "./vector.service.js";
 
 /**
  * ==========================================
  * Generate New Website
  * ==========================================
  */
-export const generateWebsiteService = async (
-  projectId,
-  prompt,
-  userId
-) => {
-  const project = await Project.findOne({
-    _id: projectId,
-    owner: userId,
-  });
+export const generateWebsiteService = async (prompt) => {
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
 
-  if (!project) {
-    throw new ApiError(404, "Project not found.");
-  }
-
-  project.status = "generating";
-
-  // Save first user prompt
-  project.messages.push({
-    role: "user",
-    content: prompt,
-  });
-
-  await project.save();
-
-  try {
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-
-      messages: [
-        {
-          role: "system",
-          content: `
+    messages: [
+      {
+        role: "system",
+        content: `
 You are an expert React.js and Tailwind CSS developer.
 
 Generate a complete React project.
@@ -74,40 +52,21 @@ Rules:
   - type
   - language
 `,
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+  });
 
-    const aiResponse = completion.choices[0].message.content;
+  const aiResponse = completion.choices[0].message.content;
+  const parsedResponse = parseAIResponse(aiResponse);
 
-    const parsedResponse = parseAIResponse(aiResponse);
-
-    project.prompt = prompt;
-    project.generatedFiles = parsedResponse.files;
-
-    project.messages.push({
-      role: "assistant",
-      content: aiResponse,
-    });
-
-    project.status = "completed";
-
-    await project.save();
-
-    return project;
-  } catch (error) {
-    project.status = "failed";
-    await project.save();
-
-    throw new ApiError(
-      500,
-      error.message || "Website generation failed."
-    );
-  }
+  return {
+    files: parsedResponse.files,
+    rawResponse: aiResponse,
+  };
 };
 
 /**
@@ -138,6 +97,24 @@ export const chatWithProjectService = async (
 
   await project.save();
 
+  // =====================================
+  // Search and inject relevant project files
+  // =====================================
+  const relevantFiles = await searchRelevantFiles(
+  project._id.toString(),
+  message
+);
+
+  const projectContext = relevantFiles
+    .map(
+      (file) => `
+File: ${file.filePath}
+
+${file.content}
+`
+    )
+    .join("\n\n");
+
   try {
     const formattedHistory = project.messages.map((msg) => ({
       role: msg.role,
@@ -145,29 +122,24 @@ export const chatWithProjectService = async (
     }));
 
     const messages = [
-      {
-        role: "system",
-        content: `
-You are an expert React.js developer.
+     {
+  role: "system",
+  content: `
+Relevant project files:
 
-You are modifying an existing React project.
+${projectContext}
+
+Modify ONLY the files required to satisfy the user's request.
+
+If additional files are required, create them.
 
 Return ONLY valid JSON.
-
-Response format:
 
 {
   "files":[]
 }
-
-Rules:
-
-- Return ONLY JSON.
-- No markdown.
-- No explanation.
-- Return the COMPLETE updated project.
 `,
-      },
+},
 
       ...formattedHistory,
 

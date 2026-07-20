@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import groq from "./lib/groq.js";
+import groq from "../lib/groq.js";
 
 async function testGroq() {
   try {

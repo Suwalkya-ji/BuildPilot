@@ -10,6 +10,7 @@ import errorHandler from "./middleware/error.middleware.js";
 
 import projectRoutes from "./routes/project.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
+import bullBoard from "./dashboard/bullBoard.js";
 
 const app = express();
 
@@ -63,6 +64,8 @@ Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/ai", aiRoutes);
+
+app.use("/admin/queues", bullBoard.getRouter());
 
 /*
 ===========================

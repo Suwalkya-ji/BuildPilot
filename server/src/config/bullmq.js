@@ -1,4 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
 import IORedis from "ioredis";
+
 
 const bullmqConnection = new IORedis({
   host: process.env.REDIS_HOST,

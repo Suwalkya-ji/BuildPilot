@@ -106,6 +106,7 @@ const projectSchema = new mongoose.Schema(
       type: String,
       enum: [
         "draft",
+        "queued",
         "generating",
         "completed",
         "failed",
