@@ -16,6 +16,9 @@ import bullBoard from "./dashboard/bullBoard.js";
 
 const app = express();
 
+// Trust Nginx reverse proxy
+app.set("trust proxy", 1);
+
 const isProduction = process.env.NODE_ENV === "production";
 
 // Resolve __dirname for ES Modules (not available by default)
@@ -53,11 +56,8 @@ app.use(
 
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        upgradeInsecureRequests: null,
-      },
-    },
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
   })
 );
 
