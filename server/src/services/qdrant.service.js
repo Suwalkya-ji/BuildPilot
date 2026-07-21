@@ -11,7 +11,7 @@ export const createCollection = async () => {
     );
 
     if (exists) {
-      console.log("✅ Qdrant collection already exists");
+    console.info("[Qdrant] Collection already exists");
       return;
     }
 
@@ -22,7 +22,7 @@ export const createCollection = async () => {
       },
     });
 
-    console.log("✅ Qdrant collection created");
+    console.info("[Qdrant] Collection created successfully");
   } catch (error) {
     console.error("❌ Failed to create collection:", error);
     throw error;

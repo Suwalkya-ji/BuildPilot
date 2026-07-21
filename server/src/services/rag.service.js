@@ -32,9 +32,9 @@ export const searchRelevantFiles = async (
       with_payload: true,
     });
 
-    return results.points.map((point) => point.payload);
+    return results?.points?.map((point) => point.payload) || [];
   } catch (error) {
-    console.error("Semantic Search Error:", error);
-    throw error;
+    console.warn("Semantic Search Warning (falling back to direct file context):", error.message);
+    return [];
   }
 };

@@ -2,6 +2,7 @@ import { Worker } from "bullmq";
 import bullmqConnection from "../config/bullmq.js";
 import { generateWebsiteService } from "../services/ai.service.js";
 import { indexProjectFile } from "../services/vector.service.js";
+import { getIO } from "../config/socket.js";
 import Project from "../models/project.model.js";
 
 const generationWorker = new Worker(
@@ -20,12 +21,24 @@ const generationWorker = new Worker(
 
     project.status = "generating";
 
-    project.messages.push({
-      role: "user",
-      content: prompt,
-    });
+    // Deduplicate prompt message in messages history
+    const lastMsg = project.messages[project.messages.length - 1];
+    if (!lastMsg || lastMsg.role !== "user" || lastMsg.content !== prompt) {
+      project.messages.push({
+        role: "user",
+        content: prompt,
+      });
+    }
 
     await project.save();
+
+    // Notify room of generating status
+    try {
+      const io = getIO();
+      io.to(`project:${projectId}`).emit("generation-status", { status: "generating", projectId });
+    } catch (err) {
+      console.warn("Socket notification warning:", err.message);
+    }
 
     try {
       // Generate website using AI
@@ -41,14 +54,18 @@ const generationWorker = new Worker(
       });
 
       project.status = "completed";
-
       await project.save();
 
-      // ===============================
-      // Index generated files into Qdrant
-      // ===============================
-      console.log("📚 Indexing project files into Qdrant...");
+      // Notify room of completion and updated files
+      try {
+        const io = getIO();
+        io.to(`project:${projectId}`).emit("project-updated", project);
+        io.to(`project:${projectId}`).emit("generation-status", { status: "completed", projectId, files });
+      } catch (err) {
+        console.warn("Socket notification warning:", err.message);
+      }
 
+      // Index generated files into Qdrant asynchronously
       for (const file of project.generatedFiles) {
         try {
           await indexProjectFile(
@@ -56,17 +73,10 @@ const generationWorker = new Worker(
             file.path,
             file.content
           );
-
-          console.log(`✅ Indexed: ${file.path}`);
         } catch (error) {
-          console.error(
-            `❌ Failed to index ${file.path}:`,
-            error.message
-          );
+          console.error(`[Worker] Failed to index ${file.path}:`, error.message);
         }
       }
-
-      console.log("🎉 All possible files indexed.");
 
       return {
         success: true,
@@ -75,6 +85,11 @@ const generationWorker = new Worker(
     } catch (error) {
       project.status = "failed";
       await project.save();
+
+      try {
+        const io = getIO();
+        io.to(`project:${projectId}`).emit("generation-status", { status: "failed", projectId, error: error.message });
+      } catch {}
 
       throw error;
     }
@@ -85,11 +100,11 @@ const generationWorker = new Worker(
 );
 
 generationWorker.on("completed", (job) => {
-  console.log(`✅ Job ${job.id} completed`);
+  console.info(`[Worker] Generation job ${job.id} completed successfully`);
 });
 
 generationWorker.on("failed", (job, error) => {
-  console.log(`❌ Job ${job?.id} failed: ${error.message}`);
+  console.error(`[Worker] Generation job ${job?.id} failed: ${error.message}`);
 });
 
 export default generationWorker;

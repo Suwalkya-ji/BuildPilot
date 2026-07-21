@@ -4,6 +4,8 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/auth.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
@@ -13,6 +15,12 @@ import aiRoutes from "./routes/ai.routes.js";
 import bullBoard from "./dashboard/bullBoard.js";
 
 const app = express();
+
+const isProduction = process.env.NODE_ENV === "production";
+
+// Resolve __dirname for ES Modules (not available by default)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /*
 ===========================
@@ -26,17 +34,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true,
+}));
 
 app.use(helmet());
 
-app.use(morgan("dev"));
+// Use "combined" Apache-style logs in production, "dev" colorized logs in development
+app.use(morgan(isProduction ? "combined" : "dev"));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-
   max: 100,
-
   message: "Too many requests, try again later.",
 });
 
@@ -48,12 +58,15 @@ Health Check
 ===========================
 */
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "🚀 BuildPilot Backend Running",
+// Dev-only health check (in prod, the React app serves the root)
+if (!isProduction) {
+  app.get("/", (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: "🚀 BuildPilot Backend Running",
+    });
   });
-});
+}
 
 /*
 ===========================
@@ -74,5 +87,26 @@ Error Handler
 */
 
 app.use(errorHandler);
+
+/*
+===========================
+Production: Serve React Build
+===========================
+*/
+
+if (isProduction) {
+  // Point to the Vite build output folder
+  const clientBuildPath = path.join(__dirname, "../../client/dist");
+
+  // Serve static assets (JS, CSS, images) from the dist folder
+  app.use(express.static(clientBuildPath));
+
+  // Catch-all: for any route not matched by the API, serve index.html
+  // This is required so React Router works when the user refreshes a page
+  // e.g. refreshing /dashboard doesn't return a 404 from Express
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
+  });
+}
 
 export default app;
