@@ -10,7 +10,7 @@
     "worker": "nodemon worker.js"
   },
   "keywords": [],
-  "author": "Yash Mathur",
+  "author": "dinesh",
   "license": "ISC",
   "dependencies": {
     "@bull-board/api": "^8.1.2",
