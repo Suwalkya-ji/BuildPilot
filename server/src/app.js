@@ -51,7 +51,15 @@ app.use(
   })
 );
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        upgradeInsecureRequests: null,
+      },
+    },
+  })
+);
 
 // Use "combined" Apache-style logs in production, "dev" colorized logs in development
 app.use(morgan(isProduction ? "combined" : "dev"));
