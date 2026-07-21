@@ -39,7 +39,12 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginOpenerPolicy: false,
+  })
+);
 
 // Use "combined" Apache-style logs in production, "dev" colorized logs in development
 app.use(morgan(isProduction ? "combined" : "dev"));
