@@ -54,12 +54,18 @@ app.use(
   })
 );
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-  })
-);
+helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+      ]
+    }
+  }
+})
 
 // Use "combined" Apache-style logs in production, "dev" colorized logs in development
 app.use(morgan(isProduction ? "combined" : "dev"));
