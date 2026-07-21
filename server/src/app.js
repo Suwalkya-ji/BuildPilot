@@ -104,9 +104,9 @@ if (isProduction) {
   // Catch-all: for any route not matched by the API, serve index.html
   // This is required so React Router works when the user refreshes a page
   // e.g. refreshing /dashboard doesn't return a 404 from Express
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(clientBuildPath, "index.html"));
-  });
+  app.use((req, res) => {
+  res.sendFile(path.join(clientBuildPath, "index.html"));
+   });
 }
 
 export default app;
