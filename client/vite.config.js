@@ -5,13 +5,19 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    chunkSizeWarningLimit: 1200,
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],
-          monaco: ['@monaco-editor/react'],
-          sandpack: ['@codesandbox/sandpack-react'],
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+            return 'vendor';
+          }
+          if (id.includes('node_modules/@monaco-editor')) {
+            return 'monaco';
+          }
+          if (id.includes('node_modules/@codesandbox')) {
+            return 'sandpack';
+          }
         },
       },
     },
