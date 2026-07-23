@@ -1,19 +1,25 @@
 # Dependencies
 node_modules/
 **/node_modules/
+client/node_modules/
+server/node_modules/
 
 # Environment variables
 .env
 .env.*
 !.env.example
+client/.env
+server/.env
 
 # Build & Output
 dist/
 build/
 out/
+client/dist/
 
 # Uploads & Logs
 uploads/
+server/uploads/
 *.log
 npm-debug.log*
 
