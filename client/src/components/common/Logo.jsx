@@ -8,11 +8,11 @@ const Logo = ({ className = "" }) => {
   const targetPath = auth?.token ? "/dashboard" : "/";
 
   return (
-    <Link to={targetPath} className={`inline-flex items-center gap-2.5 font-bold tracking-tight text-white ${className}`}>
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 shadow-sm shadow-cyan-500/20">
+    <Link to={targetPath} className={`inline-flex items-center gap-2 font-bold tracking-tight text-white ${className}`}>
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 shadow-sm shadow-cyan-500/20">
         <Layers className="h-4 w-4" />
       </span>
-      <span className="text-base tracking-tight font-extrabold text-white">
+      <span className="text-base tracking-tight font-extrabold text-white hidden xs:inline whitespace-nowrap">
         BuildPilot <span className="text-xs font-semibold text-cyan-300 opacity-90">AI</span>
       </span>
     </Link>

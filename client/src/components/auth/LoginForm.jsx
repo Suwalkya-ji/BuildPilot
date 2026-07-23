@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import OtpVerificationForm from "./OtpVerificationForm";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +11,7 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState("login"); // 'login' | 'otp' | 'forgot'
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -19,14 +22,32 @@ const LoginForm = () => {
     setIsSubmitting(true);
 
     try {
-      await login({ email, password });
-      navigate("/dashboard");
+      const res = await login({ email, password });
+      if (res?.requiresOtp) {
+        setStep("otp");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (step === "otp") {
+    return (
+      <OtpVerificationForm
+        email={email}
+        onBackToSignup={() => setStep("login")}
+        onSuccess={() => navigate("/dashboard")}
+      />
+    );
+  }
+
+  if (step === "forgot") {
+    return <ForgotPasswordForm onBackToLogin={() => setStep("login")} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -60,9 +81,13 @@ const LoginForm = () => {
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="text-xs font-semibold text-slate-300">Password</label>
-            <a href="#" className="text-[11px] text-purple-400 hover:text-purple-300 transition font-medium">
+            <button
+              type="button"
+              onClick={() => setStep("forgot")}
+              className="text-[11px] text-purple-400 hover:text-purple-300 transition font-medium cursor-pointer"
+            >
               Forgot Password?
-            </a>
+            </button>
           </div>
           <div className="relative flex items-center">
             <Lock className="absolute left-3.5 h-4 w-4 text-slate-400" />

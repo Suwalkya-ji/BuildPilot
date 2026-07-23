@@ -13,175 +13,501 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
 
+  /* Global Interactive Element Cursors & Tactile Click Micro-animations */
+  button,
+  a[role="button"],
+  .btn,
+  .nav-glow-btn {
+    cursor: pointer !important;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  button:active,
+  a.nav-glow-btn:active,
+  .btn:active {
+    transform: scale(0.93) translateY(1px) !important;
+  }
+
   /* =====================================================
-     LIGHT THEME — Full App Overrides
-     Dark mode is the default; light adds targeted fixes.
+     LIGHT THEME — "Rosewood & Slate" Palette (v2 Refined)
+     Page Primary Bg: #F5E9E7 (warm blush rose)
+     Page Secondary Bg: #EDDAD7 (dusty rose depth)
+     Card / Component Bg: #FFFFFF (border: #E8D9D6)
+     Primary CTA Gradient: #B23A48 -> #E07A5F (rosewood to terracotta)
+     Secondary Accent: #3D405B (slate navy)
+     Heading Text: #2B2320 (near-black contrast)
+     Body / Paragraph Text: #6B5F5C (rose brown)
+     Input Placeholder: #9C8A86 (readable warm gray)
+     Icon Tints: #F6DEDC (rosewood tint) / #E4E4EC (slate tint)
      ===================================================== */
 
-  /* Body & scrollbar */
+  /* ── Body & Base Page Fills ── */
   html.light body {
-    background-color: #f1f5f9 !important;
+    background-color: #F5E9E7 !important;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.1), rgba(255, 255, 255, 0)),
-      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px) !important;
-    color: #0f172a !important;
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(224, 122, 95, 0.12), rgba(245, 233, 231, 0)),
+      linear-gradient(to right, rgba(178, 58, 72, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(178, 58, 72, 0.05) 1px, transparent 1px) !important;
+    color: #2B2320 !important;
   }
 
-  html.light ::-webkit-scrollbar-track { background: #e2e8f0; }
-  html.light ::-webkit-scrollbar-thumb { background: #94a3b8; }
-  html.light ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+  /* Scrollbars */
+  html.light ::-webkit-scrollbar-track { background: #EDDAD7; }
+  html.light ::-webkit-scrollbar-thumb { background: #E8D9D6; border-radius: 4px; }
+  html.light ::-webkit-scrollbar-thumb:hover { background: #3D405B; }
 
-  /* ── Text ── */
+  /* ── Typography & Strong Contrast Controls ── */
   html.light h1, html.light h2, html.light h3, html.light h4,
-  html.light h5, html.light h6 { color: #0f172a !important; }
+  html.light h5, html.light h6 {
+    color: #2B2320 !important;
+  }
 
-  html.light p { color: #334155 !important; }
+  html.light p, html.light label {
+    color: #6B5F5C !important;
+  }
 
-  /* Slate text utilities → dark in light mode */
-  html.light .text-slate-100 { color: #0f172a !important; }
-  html.light .text-slate-200 { color: #1e293b !important; }
-  html.light .text-slate-300 { color: #334155 !important; }
-  html.light .text-slate-400 { color: #475569 !important; }
-  html.light .text-slate-500 { color: #64748b !important; }
-  html.light .text-white    { color: #0f172a !important; }
+  /* Dark mode text utility overrides -> Rosewood & Slate light theme tokens */
+  html.light .text-slate-100,
+  html.light .text-slate-200,
+  html.light .text-slate-300,
+  html.light .text-white {
+    color: #2B2320 !important;
+  }
 
-  /* ── Dark background panels → white/light ── */
+  html.light .text-slate-400,
+  html.light .text-slate-500,
+  html.light .text-slate-600 {
+    color: #6B5F5C !important;
+  }
+
+  html.light .text-cyan-100\/90,
+  html.light .text-cyan-200,
+  html.light .text-cyan-200\/70,
+  html.light .text-cyan-200\/80,
+  html.light .text-cyan-300,
+  html.light .text-cyan-400 {
+    color: #6B5F5C !important;
+  }
+
+  html.light .text-indigo-300,
+  html.light .text-purple-400,
+  html.light .text-fuchsia-300,
+  html.light .text-fuchsia-400 {
+    color: #3D405B !important;
+  }
+
+  /* ── Page Section Alternating Backgrounds ── */
+  html.light section {
+    background-color: #F5E9E7 !important;
+  }
+
+  html.light #features,
+  html.light section.bg-secondary-section,
+  html.light .bg-alt-section {
+    background-color: #EDDAD7 !important;
+  }
+
+  html.light #how-it-works {
+    background-color: #F5E9E7 !important;
+  }
+
+  /* ── Status Badges (High Contrast Text & Icons in Light Mode) ── */
+  html.light .bg-emerald-500\/20,
+  html.light .text-emerald-200 {
+    background-color: rgba(16, 185, 129, 0.18) !important;
+    border-color: rgba(16, 185, 129, 0.4) !important;
+    color: #065F46 !important; /* Deep emerald green font */
+  }
+
+  html.light .bg-emerald-500\/20 *,
+  html.light .text-emerald-200 * {
+    color: #065F46 !important;
+  }
+
+  html.light .bg-amber-500\/20,
+  html.light .text-amber-200 {
+    background-color: rgba(245, 158, 11, 0.18) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #92400E !important; /* Deep amber brown font */
+  }
+
+  html.light .bg-amber-500\/20 *,
+  html.light .text-amber-200 * {
+    color: #92400E !important;
+  }
+
+  html.light .bg-blue-500\/20,
+  html.light .text-blue-200 {
+    background-color: rgba(59, 130, 246, 0.18) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+    color: #1E40AF !important; /* Deep navy blue font */
+  }
+
+  html.light .bg-blue-500\/20 *,
+  html.light .text-blue-200 * {
+    color: #1E40AF !important;
+  }
+
+  html.light .bg-rose-500\/20,
+  html.light .text-rose-200 {
+    background-color: rgba(244, 63, 94, 0.18) !important;
+    border-color: rgba(244, 63, 94, 0.4) !important;
+    color: #9F1239 !important; /* Deep rose red font */
+  }
+
+  html.light .bg-rose-500\/20 *,
+  html.light .text-rose-200 * {
+    color: #9F1239 !important;
+  }
+
+  /* ── Cards & Elevated Surfaces (#FFFFFF with #E8D9D6 Border + Soft Shadow) ── */
+  html.light .card-conic-glow-inner,
   html.light .bg-\[\#0b0d13\],
   html.light .bg-\[\#0b0d13\]\/90,
-  html.light .bg-\[\#0b0d13\]\/80 {
-    background-color: #f8fafc !important;
-    border-color: #e2e8f0 !important;
-  }
-
+  html.light .bg-\[\#0b0d13\]\/80,
   html.light .bg-\[\#131722\],
   html.light .bg-\[\#131722\]\/90,
-  html.light .bg-\[\#131722\]\/80 {
-    background-color: #ffffff !important;
-    border-color: #e2e8f0 !important;
-  }
-
-  html.light .bg-\[\#11141f\] {
-    background-color: #f8fafc !important;
-  }
-
+  html.light .bg-\[\#131722\]\/80,
+  html.light .bg-\[\#11141f\],
+  html.light .bg-\[\#161b26\],
   html.light .bg-\[\#161b26\]\/90,
   html.light .bg-\[\#161a29\]\/95,
-  html.light .bg-\[\#0e111a\]\/95 {
-    background-color: #ffffff !important;
-  }
-
-  html.light .bg-\[\#1e1e1e\] {
-    background-color: #f1f5f9 !important;
-  }
-
-  /* ── Workspace panel backgrounds ── */
+  html.light .bg-\[\#0e111a\]\/95,
+  html.light .bg-\[\#1e1e1e\],
+  html.light .bg-\[\#090b10\],
+  html.light .bg-slate-900,
   html.light .bg-slate-950,
-  html.light .bg-slate-950\/80 {
-    background-color: #f1f5f9 !important;
+  html.light .bg-slate-950\/80,
+  html.light .auth-card {
+    background-color: #FFFFFF !important;
+    background-image: none !important; /* Strips dark background gradients */
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: 0 4px 16px rgba(178, 58, 72, 0.06), 0 1px 3px rgba(43, 35, 32, 0.04) !important;
   }
 
-  /* ── Borders → light grey ── */
-  html.light .border-white\/10 { border-color: #e2e8f0 !important; }
-  html.light .border-white\/15 { border-color: #d1d5db !important; }
-  html.light .border-white\/20 { border-color: #cbd5e1 !important; }
-
-  /* ── White/5 & White/10 backgrounds (subtle surfaces) → light grey ── */
-  html.light .bg-white\/5  { background-color: #f1f5f9 !important; }
-  html.light .bg-white\/10 { background-color: #e2e8f0 !important; }
-
-  /* ── Cards ── */
-  html.light .card-conic-glow-inner {
-    background: #ffffff !important;
-    border-color: #e2e8f0 !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06) !important;
+  /* Ensure card headings inside white cards are #2B2320 near-black */
+  html.light .card-conic-glow-inner h3,
+  html.light .card-conic-glow-inner h2,
+  html.light .card-conic-glow-inner h1 {
+    color: #2B2320 !important;
   }
 
-  html.light .card-conic-glow {
-    border-color: #cbd5e1 !important;
+  html.light .card-conic-glow-inner p {
+    color: #6B5F5C !important;
   }
 
-  /* ── Header & Navbar ── */
-  html.light header {
-    background-color: rgba(255, 255, 255, 0.92) !important;
-    border-bottom-color: #e2e8f0 !important;
+  /* Outer card containers & borders */
+  html.light .card-conic-glow,
+  html.light .border-white\/10,
+  html.light .border-white\/15,
+  html.light .border-white\/20,
+  html.light .border-white\/25 {
+    border-color: #E8D9D6 !important;
   }
 
-  /* ── Nav links ── */
-  html.light .nav-link-animated { color: #334155 !important; }
-  html.light .nav-link-animated:hover { color: #6366f1 !important; }
-
-  /* ── Nav Glow Button inner (cancel, outline buttons) ── */
-  html.light .nav-glow-btn { border-color: #d1d5db !important; }
-  html.light .nav-glow-btn-inner {
-    background-color: #ffffff !important;
-    color: #1e293b !important;
+  /* Interactive card hover */
+  html.light .card-conic-glow:hover,
+  html.light .glow-card-interactive:hover {
+    border-color: #B23A48 !important;
+    box-shadow: 0 10px 30px rgba(178, 58, 72, 0.12), 0 2px 6px rgba(43, 35, 32, 0.06) !important;
   }
 
-  /* ── Inputs & Textareas ── */
-  html.light input,
+  /* ── Subtle surface fills ── */
+  html.light .bg-white\/5,
+  html.light .bg-white\/10 {
+    background-color: #EDDAD7 !important;
+    border-color: #E8D9D6 !important;
+  }
+
+  /* ── Header & Navbar Rules (Zero Rectangular Box Borders around inner divs) ── */
+  /* Floating rounded pill navbar on Landing Page */
+  html.light header.sticky.top-4 {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  html.light header.sticky.top-4 > div.rounded-full {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    background-image: none !important;
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: 0 6px 24px rgba(43, 35, 32, 0.07), 0 2px 6px rgba(43, 35, 32, 0.04) !important;
+  }
+
+  /* Full-width App Top Bar Headers (Dashboard & Workspace) */
+  html.light header.flex,
+  html.light header.sticky.top-0 {
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    border: none !important;
+    border-bottom: 1px solid #E8D9D6 !important;
+    box-shadow: 0 2px 10px rgba(43, 35, 32, 0.04) !important;
+  }
+
+  /* STRIP all 1px rectangular borders & box shadows from inner wrapper divs inside headers */
+  html.light header div {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Re-apply border ONLY to actual buttons inside headers (e.g. Sign Out, Theme Toggle) */
+  html.light header button,
+  html.light header a.rounded-xl,
+  html.light header a.rounded-lg,
+  html.light header a.nav-glow-btn {
+    border: 1px solid #E8D9D6 !important;
+    cursor: pointer !important;
+  }
+
+  html.light header button:active,
+  html.light header a:active {
+    transform: scale(0.93) translateY(1px) !important;
+  }
+
+  html.light header button.nav-glow-btn,
+  html.light header a.nav-glow-btn {
+    border-color: transparent !important;
+  }
+
+  html.light .nav-link-animated {
+    color: #3D405B !important;
+  }
+
+  html.light .nav-link-animated:hover {
+    color: #B23A48 !important;
+  }
+
+  html.light .nav-link-animated::after {
+    background: linear-gradient(90deg, #B23A48, #E07A5F) !important;
+    box-shadow: 0 0 8px rgba(178, 58, 72, 0.5) !important;
+  }
+
+  /* ── User & Assistant Chat Message Bubbles & Icons ── */
+  html.light .user-msg-bubble {
+    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
+    box-shadow: 0 4px 14px rgba(178, 58, 72, 0.25) !important;
+  }
+
+  html.light .user-msg-bubble,
+  html.light .user-msg-bubble *,
+  html.light .user-msg-bubble p,
+  html.light .user-msg-bubble span {
+    color: #FFFFFF !important;
+  }
+
+  html.light .assistant-msg-bubble {
+    background-color: #FFFFFF !important;
+    color: #2B2320 !important;
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: 0 2px 8px rgba(43, 35, 32, 0.04) !important;
+  }
+
+  html.light .light-ai-label {
+    color: #B23A48 !important;
+  }
+
+  html.light .light-ai-label svg {
+    color: #B23A48 !important;
+  }
+
+  html.light .light-bot-icon,
+  html.light .light-user-icon {
+    background-color: #F6DEDC !important;
+    border: 1px solid #E8D9D6 !important;
+    color: #B23A48 !important;
+  }
+
+  html.light .light-bot-icon svg,
+  html.light .light-user-icon svg {
+    color: #B23A48 !important;
+  }
+
+  /* ── RAG Prompt Input Box, Textarea & Ask BuildPilot Button ── */
+  html.light .light-chat-form {
+    background-color: #FFFFFF !important;
+    border-top: 1px solid #E8D9D6 !important;
+  }
+
+  html.light .light-rag-title {
+    color: #2B2320 !important;
+  }
+
+  html.light .light-rag-box {
+    background-color: #FAF6F5 !important;
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: inset 0 1px 3px rgba(43, 35, 32, 0.03) !important;
+  }
+
+  html.light .light-rag-box:focus-within {
+    border-color: #B23A48 !important;
+    box-shadow: 0 0 0 3px rgba(178, 58, 72, 0.12) !important;
+  }
+
+  /* ABSOLUTELY STRIP inner borders, focus rings, and focus outlines on textarea elements */
   html.light textarea,
-  html.light select {
-    background-color: #f8fafc !important;
-    border-color: #d1d5db !important;
-    color: #0f172a !important;
+  html.light textarea:focus,
+  html.light textarea:focus-visible,
+  html.light textarea.light-rag-textarea,
+  html.light textarea.light-rag-textarea:focus,
+  html.light textarea.light-rag-textarea:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    ring: 0 !important;
+    --tw-ring-shadow: none !important;
+    --tw-ring-color: transparent !important;
+    background: transparent !important;
+    color: #2B2320 !important;
+  }
+
+  html.light textarea::placeholder,
+  html.light textarea.light-rag-textarea::placeholder {
+    color: #8E7E7A !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure ChatInput submit button stays 100% vibrant deep Rosewood gradient */
+  html.light form button[type="submit"],
+  html.light .light-submit-btn {
+    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 14px rgba(178, 58, 72, 0.35) !important;
+  }
+
+  html.light form button[type="submit"] *,
+  html.light .light-submit-btn * {
+    color: #FFFFFF !important;
+  }
+
+  html.light form button[type="submit"]:disabled {
+    opacity: 0.45 !important;
+  }
+
+  /* ── Buttons & CTAs ── */
+  /* Primary Action Buttons: Rosewood -> Terracotta Gradient */
+  html.light .bg-gradient-to-r.from-fuchsia-500,
+  html.light .bg-gradient-to-r.from-cyan-400,
+  html.light .bg-gradient-to-r.from-purple-600,
+  html.light .btn-primary {
+    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
+    color: #FFFFFF !important;
+  }
+
+  html.light .nav-glow-btn {
+    border-color: transparent !important;
+  }
+
+  html.light .nav-glow-btn-inner {
+    color: #FFFFFF !important;
+  }
+
+  html.light .nav-glow-btn-inner.bg-gradient-to-r {
+    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Secondary Buttons */
+  html.light .nav-glow-btn-inner.bg-white\/10 {
+    background-color: #E4E4EC !important;
+    color: #3D405B !important;
+    border: 1px solid #E8D9D6 !important;
+  }
+
+  /* ── Feature & Workflow Icon Cards (Soft Tints) ── */
+  html.light .card-conic-glow-inner .bg-gradient-to-tr,
+  html.light .bg-cyan-500\/20,
+  html.light .bg-indigo-500\/20,
+  html.light .bg-fuchsia-500\/20 {
+    background: #F6DEDC !important;
+    border: 1px solid #E8D9D6 !important;
+    color: #B23A48 !important;
+  }
+
+  html.light .card-conic-glow-inner .bg-gradient-to-tr svg,
+  html.light .card-conic-glow-inner svg {
+    color: #B23A48 !important;
+  }
+
+  /* Workflow Step Badges (Slate Navy Accent) */
+  html.light .bg-fuchsia-500\/20.border-fuchsia-400\/40 {
+    background: #E4E4EC !important;
+    color: #3D405B !important;
+    border-color: #E8D9D6 !important;
+    box-shadow: 0 2px 10px rgba(61, 64, 91, 0.1) !important;
+  }
+
+  /* ── Hero Container ── */
+  html.light .bg-hero-card {
+    background: linear-gradient(135deg, #F5E9E7 0%, #EDDAD7 100%) !important;
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: 0 10px 40px rgba(178, 58, 72, 0.08), 0 2px 8px rgba(43, 35, 32, 0.04) !important;
+  }
+
+  html.light .bg-hero-card h1 {
+    color: #2B2320 !important;
+  }
+
+  html.light .bg-hero-card p {
+    color: #6B5F5C !important;
+  }
+
+  /* Hero Ambient Glows */
+  html.light .bg-cyan-400\/20 {
+    background-color: rgba(178, 58, 72, 0.12) !important;
+  }
+  html.light .bg-fuchsia-500\/20 {
+    background-color: rgba(224, 122, 95, 0.12) !important;
+  }
+
+  /* ── Form Inputs & Dropdowns (Excluding Textareas) ── */
+  html.light input:not([type="checkbox"]):not([type="radio"]),
+  html.light select,
+  html.light .input-box {
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    border: 1px solid #E8D9D6 !important;
+    box-shadow: 0 2px 8px rgba(178, 58, 72, 0.06), 0 1px 3px rgba(43, 35, 32, 0.04) !important;
+    color: #2B2320 !important;
   }
 
   html.light input::placeholder,
-  html.light textarea::placeholder { color: #94a3b8 !important; }
+  html.light select::placeholder {
+    color: #8E7E7A !important;
+    opacity: 1 !important;
+  }
 
   html.light input:focus,
-  html.light textarea:focus { border-color: #6366f1 !important; }
-
-  /* ── Auth Layout ── */
-  html.light .auth-card {
-    background-color: #ffffff !important;
-    border-color: #e2e8f0 !important;
+  html.light select:focus {
+    border-color: #B23A48 !important;
+    box-shadow: 0 0 0 3px rgba(178, 58, 72, 0.15), 0 4px 12px rgba(178, 58, 72, 0.08) !important;
   }
 
-  /* ── Dashboard skeleton shimmer ── */
-  html.light .animate-pulse .bg-white\/10 { background-color: #e2e8f0 !important; }
-  html.light .animate-pulse .bg-white\/5  { background-color: #f1f5f9 !important; }
-
-  /* ── File Explorer (Workspace) ── */
-  html.light .font-mono { color: #334155 !important; }
-
-  /* ── Project Status badges (preserve colors, just adjust bg) ── */
-  html.light .bg-emerald-500\/20 { background-color: rgba(16,185,129,0.15) !important; }
-  html.light .bg-amber-500\/20   { background-color: rgba(245,158,11,0.15) !important; }
-  html.light .bg-rose-500\/20    { background-color: rgba(244,63,94,0.15) !important; }
-  html.light .bg-blue-500\/20    { background-color: rgba(59,130,246,0.15) !important; }
-  html.light .bg-cyan-500\/20    { background-color: rgba(6,182,212,0.15) !important; }
-  html.light .bg-indigo-600\/20  { background-color: rgba(99,102,241,0.15) !important; }
-
-  /* ── Gradient cards (hero) ── */
-  html.light .bg-hero-card {
-    background: linear-gradient(125deg, #4338ca 0%, #3730a3 30%, #0284c7 70%, #0284c7 100%) !important;
+  /* ── Page Footer Bar (Full-Width Main Footer Only) ── */
+  html.light footer.border-t,
+  html.light body > footer {
+    background-color: #EDDAD7 !important;
+    background-image: none !important;
+    border-top: 1px solid #E8D9D6 !important;
+    box-shadow: 0 -4px 20px rgba(43, 35, 32, 0.04) !important;
+    color: #6B5F5C !important;
   }
 
-  /* ── Footer ── */
-  html.light footer {
-    background-color: rgba(255, 255, 255, 0.80) !important;
-    border-top-color: #e2e8f0 !important;
-    color: #64748b !important;
+  /* ── Logo ── */
+  html.light .bg-cyan-500\/10 {
+    background-color: #F6DEDC !important;
+    border-color: transparent !important;
+    color: #B23A48 !important;
   }
 
-  /* ── Error boundary card ── */
-  html.light .bg-\[\#131722\]\/90 {
-    background-color: rgba(255,255,255,0.95) !important;
+  html.light .bg-cyan-500\/10 svg {
+    color: #B23A48 !important;
   }
 
-  /* ── Workspace specific ── */
-  html.light .bg-\[\#090b10\] {
-    background-color: #f1f5f9 !important;
+  html.light .text-cyan-300 {
+    color: #E07A5F !important;
   }
-
-  html.light .text-indigo-300 { color: #4338ca !important; }
-  html.light .text-cyan-300   { color: #0284c7 !important; }
-  html.light .text-cyan-400   { color: #0891b2 !important; }
-  html.light .text-fuchsia-300 { color: #a21caf !important; }
-  html.light .text-purple-400 { color: #7c3aed !important; }
-  html.light .text-emerald-400 { color: #059669 !important; }
 }
 
 /* Custom Hero Radial & Gradient Background */
@@ -206,7 +532,7 @@
 .btn-primary,
 .btn-secondary,
 .btn-accent {
-  @apply relative inline-flex items-center justify-center overflow-hidden rounded-full p-[2px] border border-white/20 transition-all duration-300 hover:scale-110 hover:border-transparent hover:shadow-[0_0_25px_rgba(34,211,238,0.45)] active:scale-95 cursor-pointer;
+  @apply relative inline-flex items-center justify-center overflow-hidden rounded-full p-[2px] border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer;
 }
 
 .nav-glow-btn::before,
@@ -221,8 +547,8 @@
   background: conic-gradient(
     from 0deg,
     transparent 0deg 210deg,
-    #22d3ee 240deg,
-    #d946ef 300deg,
+    #B23A48 240deg,
+    #E07A5F 300deg,
     transparent 360deg
   );
   opacity: 0;
@@ -286,7 +612,7 @@
 
 /* Rotating Broken Conic Border Glow Card for Features & Workflow */
 .card-conic-glow {
-  @apply relative overflow-hidden rounded-2xl p-[1.5px] border border-white/15 transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1.5 hover:border-transparent hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] cursor-pointer;
+  @apply relative overflow-hidden rounded-2xl p-[1.5px] border border-white/15 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1.5 hover:border-transparent cursor-pointer;
 }
 
 .card-conic-glow::before {
@@ -296,8 +622,8 @@
   background: conic-gradient(
     from 0deg,
     transparent 0deg 210deg,
-    #22d3ee 240deg,
-    #d946ef 300deg,
+    #B23A48 240deg,
+    #E07A5F 300deg,
     transparent 360deg
   );
   opacity: 0;
@@ -325,9 +651,9 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background: linear-gradient(90deg, #22d3ee, #d946ef);
+  background: linear-gradient(90deg, #B23A48, #E07A5F);
   border-radius: 9999px;
-  box-shadow: 0 0 8px rgba(34, 211, 238, 0.8);
+  box-shadow: 0 0 8px rgba(178, 58, 72, 0.8);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -378,8 +704,8 @@
 }
 
 .w-1[data-panel-resize-handle-id]:hover::after {
-  background: rgba(34, 211, 238, 0.8);
-  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  background: rgba(178, 58, 72, 0.8);
+  box-shadow: 0 0 8px rgba(178, 58, 72, 0.4);
 }
 
 /* Drag grip dots on vertical dividers */
@@ -394,6 +720,6 @@
 }
 
 .h-1[data-panel-resize-handle-id]:hover::after {
-  background: rgba(34, 211, 238, 0.8);
-  box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+  background: rgba(178, 58, 72, 0.8);
+  box-shadow: 0 0 8px rgba(178, 58, 72, 0.4);
 }

@@ -4,7 +4,7 @@ import Container from "../common/Container";
 
 const CTA = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 bg-secondary-section">
       <Container>
         <div className="relative overflow-hidden rounded-3xl bg-hero-card p-10 sm:p-14 text-center shadow-2xl border border-white/20">
           <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-400/20 blur-3xl" />

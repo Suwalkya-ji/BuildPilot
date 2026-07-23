@@ -31,8 +31,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const res = await apiClient.post("/auth/login", credentials);
-    const authToken = res.data?.token || res.data?.data?.token;
-    const userData = res.data?.user || res.data?.data?.user;
+    const data = res.data?.data || res.data;
+
+    if (data?.requiresOtp) {
+      return data;
+    }
+
+    const authToken = data?.token;
+    const userData = data?.user;
 
     if (authToken) {
       localStorage.setItem("token", authToken);
@@ -42,13 +48,20 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
     }
-    return res.data;
+    return data;
   };
 
   const signup = async (userDataInput) => {
     const res = await apiClient.post("/auth/register", userDataInput);
-    const authToken = res.data?.token || res.data?.data?.token;
-    const userData = res.data?.user || res.data?.data?.user;
+    const data = res.data?.data || res.data;
+    return data;
+  };
+
+  const verifyOtp = async (email, otp) => {
+    const res = await apiClient.post("/auth/verify-otp", { email, otp });
+    const data = res.data?.data || res.data;
+    const authToken = data?.token;
+    const userData = data?.user;
 
     if (authToken) {
       localStorage.setItem("token", authToken);
@@ -58,7 +71,22 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
     }
-    return res.data;
+    return data;
+  };
+
+  const resendOtp = async (email) => {
+    const res = await apiClient.post("/auth/resend-otp", { email });
+    return res.data?.data || res.data;
+  };
+
+  const forgotPassword = async (email) => {
+    const res = await apiClient.post("/auth/forgot-password", { email });
+    return res.data?.data || res.data;
+  };
+
+  const resetPassword = async (data) => {
+    const res = await apiClient.post("/auth/reset-password", data);
+    return res.data?.data || res.data;
   };
 
   const logout = () => {
@@ -76,6 +104,10 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         signup,
+        verifyOtp,
+        resendOtp,
+        forgotPassword,
+        resetPassword,
         logout,
         isAuthenticated: !!token,
       }}

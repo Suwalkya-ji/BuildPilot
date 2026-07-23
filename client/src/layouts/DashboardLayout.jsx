@@ -62,7 +62,7 @@ const DashboardLayout = () => {
             <button
               onClick={handleLogout}
               aria-label="Sign out of BuildPilot"
-              className="ml-2 flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/30 transition shadow-sm"
+              className="ml-2 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/30 hover:scale-105 active:scale-90 active:translate-y-0.5 transition-all duration-150 cursor-pointer shadow-sm"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Sign Out</span>
@@ -74,7 +74,7 @@ const DashboardLayout = () => {
             onClick={() => setMobileMenuOpen((v) => !v)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
-            className="sm:hidden flex items-center justify-center h-8 w-8 rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white transition"
+            className="sm:hidden flex items-center justify-center h-8 w-8 rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:scale-105 active:scale-90 active:translate-y-0.5 transition cursor-pointer"
           >
             {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -123,7 +123,7 @@ const DashboardLayout = () => {
               <button
                 onClick={handleLogout}
                 aria-label="Sign out of BuildPilot"
-                className="w-full flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition"
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold text-rose-300 hover:bg-rose-500/20 active:scale-95 transition cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" /> Sign Out
               </button>
@@ -146,4 +146,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-

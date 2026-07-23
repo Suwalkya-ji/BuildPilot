@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { getProjectApi, updateProjectApi } from "../api/project.api";
 import { chatWithProjectApi } from "../api/ai.api";
 import { useSocket } from "../hooks/useSocket";
+import { MessageSquare, Code2, Eye } from "lucide-react";
 
 import Header from "../components/workspace/Header";
 import FileExplorer from "../components/workspace/FileExplorer";
@@ -42,7 +43,7 @@ const DragBar = ({ direction, onDelta }) => {
   return (
     <div
       onMouseDown={handleMouseDown}
-      className="group flex-shrink-0 relative"
+      className="group flex-shrink-0 relative hidden md:block"
       style={{
         width: direction === "h" ? 5 : "100%",
         height: direction === "h" ? "100%" : 5,
@@ -64,8 +65,12 @@ const Workspace = () => {
 
   // Panel widths (px). Negative = auto (fills remaining space)
   const [fileW, setFileW] = useState(220);   // File Explorer width
+  const [isFilesOpen, setIsFilesOpen] = useState(true); // Files sidebar collapse state
   const [rightW, setRightW] = useState(400); // Right column width
   const [previewH, setPreviewH] = useState(55); // Preview height % in right col
+
+  // Mobile active tab state ("chat" | "code" | "preview")
+  const [mobileTab, setMobileTab] = useState("code");
 
   const [activeFile, setActiveFile] = useState("src/App.jsx");
   const [openTabs, setOpenTabs] = useState(["src/App.jsx"]);
@@ -215,22 +220,104 @@ const Workspace = () => {
         onSave={() => saveMutation.mutate(files)}
         isSaving={saveMutation.isPending}
         files={files}
+        isFilesOpen={isFilesOpen}
+        onToggleFiles={() => setIsFilesOpen(!isFilesOpen)}
       />
 
-      {/* ── 3-COLUMN BODY ─────────────────────────────────── */}
-      <div className="flex flex-1 overflow-hidden" ref={containerRef}>
+      {/* ── MOBILE WORKSPACE VIEWPORT TAB SWITCHER (Visible only on screens < md) ── */}
+      <div className="md:hidden flex items-center justify-around border-b border-white/10 bg-[#131722] p-1.5 text-xs font-bold font-mono">
+        <button
+          onClick={() => setMobileTab("chat")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            mobileTab === "chat"
+              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <MessageSquare className="h-3.5 w-3.5" /> AI Chat
+        </button>
+
+        <button
+          onClick={() => setMobileTab("code")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            mobileTab === "code"
+              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <Code2 className="h-3.5 w-3.5" /> Editor
+        </button>
+
+        <button
+          onClick={() => setMobileTab("preview")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            mobileTab === "preview"
+              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <Eye className="h-3.5 w-3.5" /> Preview
+        </button>
+      </div>
+
+      {/* ── MOBILE ONLY SINGLE PANEL CONTENT ── */}
+      <div className="flex-1 md:hidden overflow-hidden flex flex-col">
+        {mobileTab === "chat" && (
+          <div className="h-full w-full">
+            <ChatPanel
+              messages={messages}
+              onSendMessage={(msg) => chatMutation.mutate(msg)}
+              isLoading={chatMutation.isPending}
+            />
+          </div>
+        )}
+
+        {mobileTab === "code" && (
+          <div className="h-full w-full flex flex-col bg-[#1e1e1e]">
+            <EditorTabs
+              openTabs={openTabs}
+              activeFile={activeFile}
+              onSelectTab={setActiveFile}
+              onCloseTab={handleCloseTab}
+              isFilesOpen={isFilesOpen}
+              onOpenFiles={() => setIsFilesOpen(true)}
+            />
+            <div className="flex-1 overflow-hidden">
+              <MonacoEditor
+                activeFile={activeFile}
+                content={currentFileObj.content || ""}
+                onChange={handleContentChange}
+              />
+            </div>
+          </div>
+        )}
+
+        {mobileTab === "preview" && (
+          <div className="h-full w-full">
+            <Preview files={files} projectId={projectId} />
+          </div>
+        )}
+      </div>
+
+      {/* ── DESKTOP 3-COLUMN BODY (Hidden on mobile < md) ── */}
+      <div className="hidden md:flex flex-1 overflow-hidden" ref={containerRef}>
 
         {/* COL 1 — File Explorer */}
-        <div style={{ width: fileW, flexShrink: 0 }} className="overflow-hidden">
-          <FileExplorer
-            files={files}
-            activeFile={activeFile}
-            onSelectFile={handleSelectFile}
-          />
-        </div>
+        {isFilesOpen && (
+          <>
+            <div style={{ width: fileW, flexShrink: 0 }} className="overflow-hidden">
+              <FileExplorer
+                files={files}
+                activeFile={activeFile}
+                onSelectFile={handleSelectFile}
+                onClose={() => setIsFilesOpen(false)}
+              />
+            </div>
 
-        {/* Drag: file | editor */}
-        <DragBar direction="h" onDelta={onFileResize} />
+            {/* Drag: file | editor */}
+            <DragBar direction="h" onDelta={onFileResize} />
+          </>
+        )}
 
         {/* COL 2 — Code Editor (fills remaining space) */}
         <div className="flex flex-1 flex-col overflow-hidden bg-[#1e1e1e]">
@@ -239,6 +326,8 @@ const Workspace = () => {
             activeFile={activeFile}
             onSelectTab={setActiveFile}
             onCloseTab={handleCloseTab}
+            isFilesOpen={isFilesOpen}
+            onOpenFiles={() => setIsFilesOpen(true)}
           />
           <div className="flex-1 overflow-hidden">
             <MonacoEditor

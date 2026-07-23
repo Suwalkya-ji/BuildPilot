@@ -9,7 +9,7 @@ const AuthLayout = () => {
       <div className="absolute bottom-1/3 right-1/4 -z-10 h-96 w-96 rounded-full bg-cyan-400/20 blur-[120px]" />
 
       {/* Centered Translucent Glassmorphic Card Container matching reference image */}
-      <main className="w-full max-w-md rounded-3xl border border-cyan-400/40 bg-[#131722]/80 p-8 sm:p-10 shadow-[0_0_50px_rgba(34,211,238,0.2)] backdrop-blur-2xl transition-all duration-300">
+      <main className="w-full max-w-md rounded-3xl border border-cyan-400/40 bg-[#131722]/80 p-8 sm:p-10 shadow-[0_0_50px_rgba(34,211,238,0.2)] backdrop-blur-2xl transition-all duration-300 auth-card">
         {/* Centered Logo */}
         <div className="mb-6 flex justify-center">
           <Logo />
@@ -18,10 +18,10 @@ const AuthLayout = () => {
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="mt-8 text-center text-xs text-slate-400 font-medium">
+      {/* Footer Text (Clean text, no box wrapper) */}
+      <p className="mt-8 text-center text-xs text-slate-400 font-medium !bg-transparent !border-none !shadow-none">
         © {new Date().getFullYear()} BuildPilot AI. All rights reserved.
-      </footer>
+      </p>
     </div>
   );
 };

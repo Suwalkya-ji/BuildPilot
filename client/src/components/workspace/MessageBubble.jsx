@@ -3,7 +3,6 @@ import { Bot, User, CheckCircle2 } from "lucide-react";
 const MessageBubble = ({ message }) => {
   const isUser = message.role === "user";
 
-  // Clean up any legacy raw JSON assistant responses into friendly text summaries
   const getDisplayContent = () => {
     if (isUser) return message.content;
     const contentStr = message.content || "";
@@ -16,7 +15,7 @@ const MessageBubble = ({ message }) => {
   return (
     <div className={`flex gap-3 text-xs leading-relaxed ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 light-bot-icon">
           <Bot className="h-4 w-4" />
         </div>
       )}
@@ -24,12 +23,12 @@ const MessageBubble = ({ message }) => {
       <div
         className={`max-w-[85%] rounded-2xl p-3.5 shadow-sm text-left ${
           isUser
-            ? "bg-indigo-600 text-white rounded-tr-none font-medium"
-            : "bg-slate-900 text-slate-200 border border-slate-800 rounded-tl-none font-mono text-[11px]"
+            ? "user-msg-bubble bg-indigo-600 text-white rounded-tr-none font-medium"
+            : "assistant-msg-bubble bg-slate-900 text-slate-200 border border-slate-800 rounded-tl-none font-mono text-[11px]"
         }`}
       >
         {!isUser && (
-          <div className="flex items-center gap-1.5 font-bold text-cyan-300 mb-1">
+          <div className="flex items-center gap-1.5 font-bold text-cyan-300 light-ai-label mb-1">
             <CheckCircle2 className="h-3.5 w-3.5" /> AI Assistant
           </div>
         )}
@@ -37,7 +36,7 @@ const MessageBubble = ({ message }) => {
       </div>
 
       {isUser && (
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-slate-300 border border-slate-700 light-user-icon">
           <User className="h-4 w-4" />
         </div>
       )}

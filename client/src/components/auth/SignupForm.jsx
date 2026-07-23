@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import OtpVerificationForm from "./OtpVerificationForm";
 
 const SignupForm = () => {
   const [name, setName] = useState("");
@@ -11,6 +12,7 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState("signup"); // 'signup' | 'otp'
 
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -27,14 +29,28 @@ const SignupForm = () => {
     setIsSubmitting(true);
 
     try {
-      await signup({ name, email, password, confirmPassword });
-      navigate("/dashboard");
+      const result = await signup({ name, email, password, confirmPassword });
+      if (result?.requiresOtp) {
+        setStep("otp");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (step === "otp") {
+    return (
+      <OtpVerificationForm
+        email={email}
+        onBackToSignup={() => setStep("signup")}
+        onSuccess={() => navigate("/dashboard")}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
