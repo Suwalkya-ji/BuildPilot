@@ -167,6 +167,12 @@ const Workspace = () => {
 
   const chatMutation = useMutation({
     mutationFn: (message) => chatWithProjectApi({ projectId, message }),
+    // Show the user's message right away instead of after the AI replies
+    onMutate: (message) => {
+      const previous = messages;
+      setMessages((prev) => [...prev, { role: "user", content: message }]);
+      return { previous };
+    },
     onSuccess: (res) => {
       const updated = res.data || res;
       if (updated.generatedFiles) setFiles(updated.generatedFiles);
@@ -174,10 +180,21 @@ const Workspace = () => {
       queryClient.invalidateQueries(["project", projectId]);
       toast.success("AI updated your codebase!");
     },
-    onError: (err) => {
+    onError: (err, _message, context) => {
+      if (context?.previous) setMessages(context.previous);
       toast.error(err?.message || "AI generation failed. Please try again.");
     },
   });
+
+  // Live status shown in the chat while the AI is working
+  let chatActivity = null;
+  if (chatMutation.isPending) {
+    chatActivity = files.length > 0 ? `Updating ${files.length} file${files.length === 1 ? "" : "s"}` : "Updating your code";
+  } else if (project?.status === "queued") {
+    chatActivity = "Queued — starting soon";
+  } else if (project?.status === "generating") {
+    chatActivity = "Generating your project";
+  }
 
   // ── Ctrl+S shortcut (after mutations are declared) ────────
   useEffect(() => {
@@ -278,6 +295,7 @@ const Workspace = () => {
               messages={messages}
               onSendMessage={(msg) => chatMutation.mutate(msg)}
               isLoading={chatMutation.isPending}
+              activity={chatActivity}
             />
           </div>
         )}
@@ -376,6 +394,7 @@ const Workspace = () => {
               messages={messages}
               onSendMessage={(msg) => chatMutation.mutate(msg)}
               isLoading={chatMutation.isPending}
+              activity={chatActivity}
             />
           </div>
         </div>
