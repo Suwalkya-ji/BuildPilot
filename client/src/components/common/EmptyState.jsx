@@ -7,12 +7,12 @@ const EmptyState = ({
   action,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-4">
+    <div className="anim-up flex flex-col items-center justify-center rounded-[18px] border border-dashed border-line-strong bg-surface p-12 text-center">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-icon-tile text-icon-ink">
         <Icon className="h-7 w-7" />
       </div>
-      <h3 className="text-lg font-bold text-slate-100">{title}</h3>
-      <p className="mt-1.5 max-w-sm text-xs text-slate-400">{description}</p>
+      <h3 className="font-display text-3xl text-fg">{title}</h3>
+      <p className="mt-2 max-w-sm text-sm text-muted">{description}</p>
       {action && <div className="mt-6">{action}</div>}
     </div>
   );

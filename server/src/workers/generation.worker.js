@@ -1,7 +1,7 @@
 import { Worker } from "bullmq";
 import bullmqConnection from "../config/bullmq.js";
 import { generateWebsiteService } from "../services/ai.service.js";
-import { indexProjectFile } from "../services/vector.service.js";
+import { reindexProjectFiles } from "../services/vector.service.js";
 import { getIO } from "../config/socket.js";
 import Project from "../models/project.model.js";
 
@@ -65,18 +65,8 @@ const generationWorker = new Worker(
         console.warn("Socket notification warning:", err.message);
       }
 
-      // Index generated files into Qdrant asynchronously
-      for (const file of project.generatedFiles) {
-        try {
-          await indexProjectFile(
-            project._id.toString(),
-            file.path,
-            file.content
-          );
-        } catch (error) {
-          console.error(`[Worker] Failed to index ${file.path}:`, error.message);
-        }
-      }
+      // Index generated files into Qdrant for chat context
+      await reindexProjectFiles(project._id.toString(), project.generatedFiles);
 
       return {
         success: true,

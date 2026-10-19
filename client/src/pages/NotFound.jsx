@@ -1,21 +1,26 @@
 import { Link } from "react-router-dom";
-import { AlertCircle, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Compass } from "lucide-react";
 
 const NotFound = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 text-center text-slate-100">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-6">
-        <AlertCircle className="h-8 w-8" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-x-clip bg-bg px-4 text-center text-fg">
+      <div
+        aria-hidden="true"
+        className="orb orb-drift-1 -left-20 -top-[120px] h-[360px] w-[360px]"
+        style={{ background: "var(--orb-1)" }}
+      />
+      <div className="anim-up relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-icon-tile text-icon-ink">
+        <Compass className="h-8 w-8" aria-hidden="true" />
       </div>
-      <h1 className="text-4xl font-extrabold text-white sm:text-5xl">404 — Page Not Found</h1>
-      <p className="mt-3 max-w-sm text-xs text-slate-400">
+      <p className="eyebrow anim-up d1 relative">Error 404</p>
+      <h1 className="anim-up d2 relative mt-3 font-display text-5xl font-normal leading-none sm:text-6xl">
+        Page not found
+      </h1>
+      <p className="anim-up d3 relative mt-4 max-w-sm text-[15px] leading-relaxed text-muted">
         The page you are looking for does not exist or has been moved.
       </p>
-      <Link
-        to="/"
-        className="mt-8 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 transition"
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to Home
+      <Link to="/" className="btn btn-primary anim-up d4 relative mt-8 h-11 px-6">
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to home
       </Link>
     </div>
   );

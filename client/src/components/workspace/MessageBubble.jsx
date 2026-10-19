@@ -1,5 +1,3 @@
-import { Bot, User, CheckCircle2 } from "lucide-react";
-
 const MessageBubble = ({ message }) => {
   const isUser = message.role === "user";
 
@@ -7,39 +5,23 @@ const MessageBubble = ({ message }) => {
     if (isUser) return message.content;
     const contentStr = message.content || "";
     if (contentStr.trim().startsWith("{") && contentStr.includes("files")) {
-      return "✅ Generated modular React application. Updated code files are ready in Monaco Editor and Live Preview.";
+      return "Generated modular React application. Updated code files are ready in the editor and live preview.";
     }
     return contentStr;
   };
 
-  return (
-    <div className={`flex gap-3 text-xs leading-relaxed ${isUser ? "justify-end" : "justify-start"}`}>
-      {!isUser && (
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 light-bot-icon">
-          <Bot className="h-4 w-4" />
-        </div>
-      )}
-
-      <div
-        className={`max-w-[85%] rounded-2xl p-3.5 shadow-sm text-left ${
-          isUser
-            ? "user-msg-bubble bg-indigo-600 text-white rounded-tr-none font-medium"
-            : "assistant-msg-bubble bg-slate-900 text-slate-200 border border-slate-800 rounded-tl-none font-mono text-[11px]"
-        }`}
-      >
-        {!isUser && (
-          <div className="flex items-center gap-1.5 font-bold text-cyan-300 light-ai-label mb-1">
-            <CheckCircle2 className="h-3.5 w-3.5" /> AI Assistant
-          </div>
-        )}
-        <p className="whitespace-pre-wrap">{getDisplayContent()}</p>
+  if (isUser) {
+    return (
+      <div className="anim-msg max-w-[85%] self-end rounded-[16px_16px_4px_16px] bg-user-bubble px-3.5 py-2.5 text-[13.5px] leading-normal text-user-fg">
+        <p className="whitespace-pre-wrap break-words">{getDisplayContent()}</p>
       </div>
+    );
+  }
 
-      {isUser && (
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-slate-300 border border-slate-700 light-user-icon">
-          <User className="h-4 w-4" />
-        </div>
-      )}
+  return (
+    <div className="anim-msg max-w-[85%] self-start rounded-[16px_16px_16px_4px] border border-line bg-ai-bubble px-3.5 py-2.5 text-[13.5px] leading-normal text-fg">
+      <div className="mb-1 text-[11px] font-semibold text-ai-label">BuildPilot AI</div>
+      <p className="whitespace-pre-wrap break-words">{getDisplayContent()}</p>
     </div>
   );
 };

@@ -1,34 +1,24 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles } from "lucide-react";
-import Container from "../common/Container";
+import { ArrowRight } from "lucide-react";
 
 const CTA = () => {
   return (
-    <section className="py-16 bg-secondary-section">
-      <Container>
-        <div className="relative overflow-hidden rounded-3xl bg-hero-card p-10 sm:p-14 text-center shadow-2xl border border-white/20">
-          <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-cyan-400/20 blur-3xl" />
-          
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold text-cyan-200 mb-6 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5 text-cyan-300 animate-pulse" /> Start Building Today
-          </span>
-
-          <h2 className="text-3xl font-extrabold text-white sm:text-5xl tracking-tight">
-            Ready to Launch Your Next App?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm text-cyan-100/90 leading-relaxed font-medium">
-            Create your free account now and experience full-stack MERN generation with AI, live code previews, and instant export.
-          </p>
-
-          <div className="mt-8 flex justify-center">
-            <Link to="/signup" className="nav-glow-btn">
-              <span className="nav-glow-btn-inner bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-cyan-400 py-3.5 px-9 text-sm text-white">
-                Get Started Free <ArrowRight className="h-5 w-5 ml-1.5 inline" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </Container>
+    <section className="reveal relative mb-24 mt-6 flex flex-col items-center gap-6 overflow-hidden rounded-[28px] bg-cta px-6 py-14 text-center text-cta-fg sm:px-12 sm:py-[72px]">
+      <div
+        aria-hidden="true"
+        className="orb orb-drift-2 left-[10%] -top-40 h-[360px] w-[360px]"
+        style={{ background: "var(--cta-orb)" }}
+      />
+      <h2 className="relative max-w-[720px] font-display text-4xl font-normal leading-[1.02] sm:text-[56px]">
+        Ready to launch your next app?
+      </h2>
+      <p className="relative max-w-[560px] text-base leading-relaxed text-cta-muted sm:text-[17px]">
+        Create a free account and turn your first idea into a working React site today.
+      </p>
+      <Link to="/signup" className="btn btn-primary shine relative h-[52px] gap-2.5 px-7 text-[15px]">
+        Get started free
+        <ArrowRight className="btn-arrow h-4 w-4" aria-hidden="true" />
+      </Link>
     </section>
   );
 };

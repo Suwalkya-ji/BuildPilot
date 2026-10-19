@@ -1,26 +1,45 @@
-import { Outlet } from "react-router-dom";
-import Logo from "../components/common/Logo";
+import { Outlet, Link } from "react-router-dom";
+import { Layers } from "lucide-react";
+import ThemeToggle from "../components/common/ThemeToggle";
 
 const AuthLayout = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0b0d13] px-4 py-12 text-slate-100 selection:bg-cyan-500 selection:text-white relative overflow-hidden">
-      {/* Background Neon Glowing Orbs matching reference image */}
-      <div className="absolute top-1/3 left-1/4 -z-10 h-96 w-96 rounded-full bg-purple-600/20 blur-[120px]" />
-      <div className="absolute bottom-1/3 right-1/4 -z-10 h-96 w-96 rounded-full bg-cyan-400/20 blur-[120px]" />
-
-      {/* Centered Translucent Glassmorphic Card Container matching reference image */}
-      <main className="w-full max-w-md rounded-3xl border border-cyan-400/40 bg-[#131722]/80 p-8 sm:p-10 shadow-[0_0_50px_rgba(34,211,238,0.2)] backdrop-blur-2xl transition-all duration-300 auth-card">
-        {/* Centered Logo */}
-        <div className="mb-6 flex justify-center">
-          <Logo />
+    <div className="flex min-h-screen flex-col bg-bg text-fg md:flex-row">
+      {/* Brand panel — stacks on top on mobile */}
+      <aside className="flex flex-col justify-between gap-8 bg-brand p-6 text-on-brand sm:p-10 md:w-[42%] md:max-w-[600px] md:gap-12 md:p-12">
+        <div className="flex items-center justify-between gap-4">
+          <Link to="/" className="inline-flex items-center gap-2.5 text-lg font-bold">
+            <span className="anim-float flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-black/25 text-logo-mark">
+              <Layers className="h-[18px] w-[18px]" aria-hidden="true" />
+            </span>
+            BuildPilot AI
+          </Link>
+          <ThemeToggle className="h-11 w-11 border-on-brand/30 text-on-brand" />
         </div>
 
-        <Outlet />
+        <div className="anim-up flex flex-col gap-5">
+          <h1 className="font-display text-[40px] leading-none sm:text-5xl lg:text-6xl">
+            From a sentence to a <em className="text-logo-mark">working site.</em>
+          </h1>
+          <p className="max-w-[420px] text-[15px] leading-relaxed text-on-brand/75 sm:text-[17px]">
+            Sign in to pick up your projects, preview them live and keep building with AI.
+          </p>
+        </div>
+
+        <p className="hidden text-[13px] text-on-brand/75 md:block">
+          © {new Date().getFullYear()} BuildPilot AI
+        </p>
+      </aside>
+
+      {/* Form side */}
+      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 md:py-12">
+        <div className="card anim-up d1 w-full max-w-[400px] rounded-[20px] p-7 sm:p-9">
+          <Outlet />
+        </div>
       </main>
 
-      {/* Footer Text (Clean text, no box wrapper) */}
-      <p className="mt-8 text-center text-xs text-slate-400 font-medium !bg-transparent !border-none !shadow-none">
-        © {new Date().getFullYear()} BuildPilot AI. All rights reserved.
+      <p className="pb-8 text-center text-[13px] text-muted md:hidden">
+        © {new Date().getFullYear()} BuildPilot AI
       </p>
     </div>
   );

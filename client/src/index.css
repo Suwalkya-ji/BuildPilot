@@ -1,725 +1,364 @@
 @import "tailwindcss";
 
+/* =====================================================
+   BuildPilot design tokens
+   Light (default): Sage Green #87A96B · Walnut Brown #5A3E2B · Amber Glow #D5851F
+   Dark:            Jet Black #050505 · Royal Amethyst #3B0A6B · Electric Cyan #00E5FF
+   Components use the Tailwind colors below (bg-surface, text-muted, bg-accent…),
+   which read these variables, so they switch theme automatically.
+   ===================================================== */
+
+:root {
+  --bg: #F4F6EF;
+  --surface: #FFFFFF;
+  --surface-2: #EEF2E8;
+  --editor: #FBFAF6;
+  --fg: #2E2016;
+  --muted: #6B5A4C;
+  --line: #D9E0CF;
+  --line-strong: #B9A795;
+  --brand: #5A3E2B;
+  --on-brand: #FFFFFF;
+  --accent: #D5851F;
+  --on-accent: #2B1B10;
+  --accent-soft: rgba(213, 133, 31, 0.18);
+  --accent-ink: #5A3E2B;
+  --tint: #E6EDDD;
+  --icon-tile: rgba(135, 169, 107, 0.28);
+  --icon-ink: #3F5F2A;
+  --logo-mark: #F4C27A;
+  --hero-panel: #87A96B;
+  --cta: #5A3E2B;
+  --cta-fg: #FFFFFF;
+  --cta-muted: #E8DACB;
+  --orb-1: rgba(135, 169, 107, 0.45);
+  --orb-2: rgba(213, 133, 31, 0.22);
+  --cta-orb: rgba(213, 133, 31, 0.45);
+  --user-bubble: #5A3E2B;
+  --user-fg: #FFFFFF;
+  --ai-bubble: #EEF2E8;
+  --ai-label: #3F5F2A;
+  --code-key: #8A4B0B;
+  --code-fn: #5A3E2B;
+  --code-tag: #3F5F2A;
+  --ok-bg: rgba(135, 169, 107, 0.25);
+  --ok-fg: #3F5F2A;
+  --warn-bg: rgba(213, 133, 31, 0.18);
+  --warn-fg: #8A4B0B;
+  --info-bg: rgba(90, 62, 43, 0.12);
+  --info-fg: #5A3E2B;
+  --err-bg: rgba(159, 18, 57, 0.12);
+  --err-fg: #9F1239;
+  --danger: #9F1239;
+  --scrim: rgba(46, 32, 22, 0.45);
+  --shadow-hero: 0 30px 80px rgba(90, 62, 43, 0.18);
+  color-scheme: light;
+}
+
+html.dark {
+  --bg: #050505;
+  --surface: #0F0B16;
+  --surface-2: #120D1A;
+  --editor: #0A0810;
+  --fg: #F3F0F7;
+  --muted: #A69FB3;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --brand: #3B0A6B;
+  --on-brand: #FFFFFF;
+  --accent: #00E5FF;
+  --on-accent: #050505;
+  --accent-soft: rgba(0, 229, 255, 0.14);
+  --accent-ink: #00E5FF;
+  --tint: rgba(255, 255, 255, 0.08);
+  --icon-tile: rgba(59, 10, 107, 0.55);
+  --icon-ink: #00E5FF;
+  --logo-mark: #00E5FF;
+  --hero-panel: #3B0A6B;
+  --cta: #3B0A6B;
+  --cta-fg: #FFFFFF;
+  --cta-muted: #D8C7EE;
+  --orb-1: rgba(59, 10, 107, 0.55);
+  --orb-2: rgba(0, 229, 255, 0.14);
+  --cta-orb: rgba(0, 229, 255, 0.35);
+  --user-bubble: #3B0A6B;
+  --user-fg: #FFFFFF;
+  --ai-bubble: #120D1A;
+  --ai-label: #00E5FF;
+  --code-key: #C9A6F2;
+  --code-fn: #00E5FF;
+  --code-tag: #7FF2FF;
+  --ok-bg: rgba(74, 222, 128, 0.14);
+  --ok-fg: #4ADE80;
+  --warn-bg: rgba(251, 191, 36, 0.14);
+  --warn-fg: #FBBF24;
+  --info-bg: rgba(0, 229, 255, 0.12);
+  --info-fg: #7FF2FF;
+  --err-bg: rgba(251, 113, 133, 0.14);
+  --err-fg: #FB7185;
+  --danger: #BE123C;
+  --scrim: rgba(0, 0, 0, 0.7);
+  --shadow-hero: 0 30px 80px rgba(59, 10, 107, 0.45);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-editor: var(--editor);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-tint: var(--tint);
+  --color-icon-tile: var(--icon-tile);
+  --color-icon-ink: var(--icon-ink);
+  --color-logo-mark: var(--logo-mark);
+  --color-hero-panel: var(--hero-panel);
+  --color-cta: var(--cta);
+  --color-cta-fg: var(--cta-fg);
+  --color-cta-muted: var(--cta-muted);
+  --color-user-bubble: var(--user-bubble);
+  --color-user-fg: var(--user-fg);
+  --color-ai-bubble: var(--ai-bubble);
+  --color-ai-label: var(--ai-label);
+  --color-code-key: var(--code-key);
+  --color-code-fn: var(--code-fn);
+  --color-code-tag: var(--code-tag);
+  --color-ok-bg: var(--ok-bg);
+  --color-ok-fg: var(--ok-fg);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-fg: var(--warn-fg);
+  --color-info-bg: var(--info-bg);
+  --color-info-fg: var(--info-fg);
+  --color-err-bg: var(--err-bg);
+  --color-err-fg: var(--err-fg);
+  --color-danger: var(--danger);
+  --color-scrim: var(--scrim);
+}
+
 @layer base {
+  html,
   body {
-    background-color: #0b0d13;
-    background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), rgba(255, 255, 255, 0)),
-      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 36px 36px, 36px 36px;
-    background-attachment: fixed;
-    @apply text-slate-100 antialiased selection:bg-cyan-500 selection:text-white min-h-screen transition-colors duration-300;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg);
+    color: var(--fg);
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* Global Interactive Element Cursors & Tactile Click Micro-animations */
-  button,
-  a[role="button"],
-  .btn,
-  .nav-glow-btn {
-    cursor: pointer !important;
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+  body {
+    @apply font-sans antialiased min-h-screen;
   }
 
-  button:active,
-  a.nav-glow-btn:active,
-  .btn:active {
-    transform: scale(0.93) translateY(1px) !important;
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
   }
 
-  /* =====================================================
-     LIGHT THEME — "Rosewood & Slate" Palette (v2 Refined)
-     Page Primary Bg: #F5E9E7 (warm blush rose)
-     Page Secondary Bg: #EDDAD7 (dusty rose depth)
-     Card / Component Bg: #FFFFFF (border: #E8D9D6)
-     Primary CTA Gradient: #B23A48 -> #E07A5F (rosewood to terracotta)
-     Secondary Accent: #3D405B (slate navy)
-     Heading Text: #2B2320 (near-black contrast)
-     Body / Paragraph Text: #6B5F5C (rose brown)
-     Input Placeholder: #9C8A86 (readable warm gray)
-     Icon Tints: #F6DEDC (rosewood tint) / #E4E4EC (slate tint)
-     ===================================================== */
-
-  /* ── Body & Base Page Fills ── */
-  html.light body {
-    background-color: #F5E9E7 !important;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(224, 122, 95, 0.12), rgba(245, 233, 231, 0)),
-      linear-gradient(to right, rgba(178, 58, 72, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(178, 58, 72, 0.05) 1px, transparent 1px) !important;
-    color: #2B2320 !important;
-  }
-
-  /* Scrollbars */
-  html.light ::-webkit-scrollbar-track { background: #EDDAD7; }
-  html.light ::-webkit-scrollbar-thumb { background: #E8D9D6; border-radius: 4px; }
-  html.light ::-webkit-scrollbar-thumb:hover { background: #3D405B; }
-
-  /* ── Typography & Strong Contrast Controls ── */
-  html.light h1, html.light h2, html.light h3, html.light h4,
-  html.light h5, html.light h6 {
-    color: #2B2320 !important;
-  }
-
-  html.light p, html.light label {
-    color: #6B5F5C !important;
-  }
-
-  /* Dark mode text utility overrides -> Rosewood & Slate light theme tokens */
-  html.light .text-slate-100,
-  html.light .text-slate-200,
-  html.light .text-slate-300,
-  html.light .text-white {
-    color: #2B2320 !important;
-  }
-
-  html.light .text-slate-400,
-  html.light .text-slate-500,
-  html.light .text-slate-600 {
-    color: #6B5F5C !important;
-  }
-
-  html.light .text-cyan-100\/90,
-  html.light .text-cyan-200,
-  html.light .text-cyan-200\/70,
-  html.light .text-cyan-200\/80,
-  html.light .text-cyan-300,
-  html.light .text-cyan-400 {
-    color: #6B5F5C !important;
-  }
-
-  html.light .text-indigo-300,
-  html.light .text-purple-400,
-  html.light .text-fuchsia-300,
-  html.light .text-fuchsia-400 {
-    color: #3D405B !important;
-  }
-
-  /* ── Page Section Alternating Backgrounds ── */
-  html.light section {
-    background-color: #F5E9E7 !important;
-  }
-
-  html.light #features,
-  html.light section.bg-secondary-section,
-  html.light .bg-alt-section {
-    background-color: #EDDAD7 !important;
-  }
-
-  html.light #how-it-works {
-    background-color: #F5E9E7 !important;
-  }
-
-  /* ── Status Badges (High Contrast Text & Icons in Light Mode) ── */
-  html.light .bg-emerald-500\/20,
-  html.light .text-emerald-200 {
-    background-color: rgba(16, 185, 129, 0.18) !important;
-    border-color: rgba(16, 185, 129, 0.4) !important;
-    color: #065F46 !important; /* Deep emerald green font */
-  }
-
-  html.light .bg-emerald-500\/20 *,
-  html.light .text-emerald-200 * {
-    color: #065F46 !important;
-  }
-
-  html.light .bg-amber-500\/20,
-  html.light .text-amber-200 {
-    background-color: rgba(245, 158, 11, 0.18) !important;
-    border-color: rgba(245, 158, 11, 0.4) !important;
-    color: #92400E !important; /* Deep amber brown font */
-  }
-
-  html.light .bg-amber-500\/20 *,
-  html.light .text-amber-200 * {
-    color: #92400E !important;
-  }
-
-  html.light .bg-blue-500\/20,
-  html.light .text-blue-200 {
-    background-color: rgba(59, 130, 246, 0.18) !important;
-    border-color: rgba(59, 130, 246, 0.4) !important;
-    color: #1E40AF !important; /* Deep navy blue font */
-  }
-
-  html.light .bg-blue-500\/20 *,
-  html.light .text-blue-200 * {
-    color: #1E40AF !important;
-  }
-
-  html.light .bg-rose-500\/20,
-  html.light .text-rose-200 {
-    background-color: rgba(244, 63, 94, 0.18) !important;
-    border-color: rgba(244, 63, 94, 0.4) !important;
-    color: #9F1239 !important; /* Deep rose red font */
-  }
-
-  html.light .bg-rose-500\/20 *,
-  html.light .text-rose-200 * {
-    color: #9F1239 !important;
-  }
-
-  /* ── Cards & Elevated Surfaces (#FFFFFF with #E8D9D6 Border + Soft Shadow) ── */
-  html.light .card-conic-glow-inner,
-  html.light .bg-\[\#0b0d13\],
-  html.light .bg-\[\#0b0d13\]\/90,
-  html.light .bg-\[\#0b0d13\]\/80,
-  html.light .bg-\[\#131722\],
-  html.light .bg-\[\#131722\]\/90,
-  html.light .bg-\[\#131722\]\/80,
-  html.light .bg-\[\#11141f\],
-  html.light .bg-\[\#161b26\],
-  html.light .bg-\[\#161b26\]\/90,
-  html.light .bg-\[\#161a29\]\/95,
-  html.light .bg-\[\#0e111a\]\/95,
-  html.light .bg-\[\#1e1e1e\],
-  html.light .bg-\[\#090b10\],
-  html.light .bg-slate-900,
-  html.light .bg-slate-950,
-  html.light .bg-slate-950\/80,
-  html.light .auth-card {
-    background-color: #FFFFFF !important;
-    background-image: none !important; /* Strips dark background gradients */
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: 0 4px 16px rgba(178, 58, 72, 0.06), 0 1px 3px rgba(43, 35, 32, 0.04) !important;
-  }
-
-  /* Ensure card headings inside white cards are #2B2320 near-black */
-  html.light .card-conic-glow-inner h3,
-  html.light .card-conic-glow-inner h2,
-  html.light .card-conic-glow-inner h1 {
-    color: #2B2320 !important;
-  }
-
-  html.light .card-conic-glow-inner p {
-    color: #6B5F5C !important;
-  }
-
-  /* Outer card containers & borders */
-  html.light .card-conic-glow,
-  html.light .border-white\/10,
-  html.light .border-white\/15,
-  html.light .border-white\/20,
-  html.light .border-white\/25 {
-    border-color: #E8D9D6 !important;
-  }
-
-  /* Interactive card hover */
-  html.light .card-conic-glow:hover,
-  html.light .glow-card-interactive:hover {
-    border-color: #B23A48 !important;
-    box-shadow: 0 10px 30px rgba(178, 58, 72, 0.12), 0 2px 6px rgba(43, 35, 32, 0.06) !important;
-  }
-
-  /* ── Subtle surface fills ── */
-  html.light .bg-white\/5,
-  html.light .bg-white\/10 {
-    background-color: #EDDAD7 !important;
-    border-color: #E8D9D6 !important;
-  }
-
-  /* ── Header & Navbar Rules (Zero Rectangular Box Borders around inner divs) ── */
-  /* Floating rounded pill navbar on Landing Page */
-  html.light header.sticky.top-4 {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  html.light header.sticky.top-4 > div.rounded-full {
-    background-color: rgba(255, 255, 255, 0.96) !important;
-    background-image: none !important;
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: 0 6px 24px rgba(43, 35, 32, 0.07), 0 2px 6px rgba(43, 35, 32, 0.04) !important;
-  }
-
-  /* Full-width App Top Bar Headers (Dashboard & Workspace) */
-  html.light header.flex,
-  html.light header.sticky.top-0 {
-    background-color: #FFFFFF !important;
-    background-image: none !important;
-    border: none !important;
-    border-bottom: 1px solid #E8D9D6 !important;
-    box-shadow: 0 2px 10px rgba(43, 35, 32, 0.04) !important;
-  }
-
-  /* STRIP all 1px rectangular borders & box shadows from inner wrapper divs inside headers */
-  html.light header div {
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Re-apply border ONLY to actual buttons inside headers (e.g. Sign Out, Theme Toggle) */
-  html.light header button,
-  html.light header a.rounded-xl,
-  html.light header a.rounded-lg,
-  html.light header a.nav-glow-btn {
-    border: 1px solid #E8D9D6 !important;
-    cursor: pointer !important;
-  }
-
-  html.light header button:active,
-  html.light header a:active {
-    transform: scale(0.93) translateY(1px) !important;
-  }
-
-  html.light header button.nav-glow-btn,
-  html.light header a.nav-glow-btn {
-    border-color: transparent !important;
-  }
-
-  html.light .nav-link-animated {
-    color: #3D405B !important;
-  }
-
-  html.light .nav-link-animated:hover {
-    color: #B23A48 !important;
-  }
-
-  html.light .nav-link-animated::after {
-    background: linear-gradient(90deg, #B23A48, #E07A5F) !important;
-    box-shadow: 0 0 8px rgba(178, 58, 72, 0.5) !important;
-  }
-
-  /* ── User & Assistant Chat Message Bubbles & Icons ── */
-  html.light .user-msg-bubble {
-    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
-    box-shadow: 0 4px 14px rgba(178, 58, 72, 0.25) !important;
-  }
-
-  html.light .user-msg-bubble,
-  html.light .user-msg-bubble *,
-  html.light .user-msg-bubble p,
-  html.light .user-msg-bubble span {
-    color: #FFFFFF !important;
-  }
-
-  html.light .assistant-msg-bubble {
-    background-color: #FFFFFF !important;
-    color: #2B2320 !important;
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: 0 2px 8px rgba(43, 35, 32, 0.04) !important;
-  }
-
-  html.light .light-ai-label {
-    color: #B23A48 !important;
-  }
-
-  html.light .light-ai-label svg {
-    color: #B23A48 !important;
-  }
-
-  html.light .light-bot-icon,
-  html.light .light-user-icon {
-    background-color: #F6DEDC !important;
-    border: 1px solid #E8D9D6 !important;
-    color: #B23A48 !important;
-  }
-
-  html.light .light-bot-icon svg,
-  html.light .light-user-icon svg {
-    color: #B23A48 !important;
-  }
-
-  /* ── RAG Prompt Input Box, Textarea & Ask BuildPilot Button ── */
-  html.light .light-chat-form {
-    background-color: #FFFFFF !important;
-    border-top: 1px solid #E8D9D6 !important;
-  }
-
-  html.light .light-rag-title {
-    color: #2B2320 !important;
-  }
-
-  html.light .light-rag-box {
-    background-color: #FAF6F5 !important;
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: inset 0 1px 3px rgba(43, 35, 32, 0.03) !important;
-  }
-
-  html.light .light-rag-box:focus-within {
-    border-color: #B23A48 !important;
-    box-shadow: 0 0 0 3px rgba(178, 58, 72, 0.12) !important;
-  }
-
-  /* ABSOLUTELY STRIP inner borders, focus rings, and focus outlines on textarea elements */
-  html.light textarea,
-  html.light textarea:focus,
-  html.light textarea:focus-visible,
-  html.light textarea.light-rag-textarea,
-  html.light textarea.light-rag-textarea:focus,
-  html.light textarea.light-rag-textarea:focus-visible {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    ring: 0 !important;
-    --tw-ring-shadow: none !important;
-    --tw-ring-color: transparent !important;
-    background: transparent !important;
-    color: #2B2320 !important;
-  }
-
-  html.light textarea::placeholder,
-  html.light textarea.light-rag-textarea::placeholder {
-    color: #8E7E7A !important;
-    opacity: 1 !important;
-  }
-
-  /* Ensure ChatInput submit button stays 100% vibrant deep Rosewood gradient */
-  html.light form button[type="submit"],
-  html.light .light-submit-btn {
-    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
-    color: #FFFFFF !important;
-    border: none !important;
-    opacity: 1 !important;
-    box-shadow: 0 4px 14px rgba(178, 58, 72, 0.35) !important;
-  }
-
-  html.light form button[type="submit"] *,
-  html.light .light-submit-btn * {
-    color: #FFFFFF !important;
-  }
-
-  html.light form button[type="submit"]:disabled {
-    opacity: 0.45 !important;
-  }
-
-  /* ── Buttons & CTAs ── */
-  /* Primary Action Buttons: Rosewood -> Terracotta Gradient */
-  html.light .bg-gradient-to-r.from-fuchsia-500,
-  html.light .bg-gradient-to-r.from-cyan-400,
-  html.light .bg-gradient-to-r.from-purple-600,
-  html.light .btn-primary {
-    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
-    color: #FFFFFF !important;
-  }
-
-  html.light .nav-glow-btn {
-    border-color: transparent !important;
-  }
-
-  html.light .nav-glow-btn-inner {
-    color: #FFFFFF !important;
-  }
-
-  html.light .nav-glow-btn-inner.bg-gradient-to-r {
-    background: linear-gradient(135deg, #B23A48 0%, #E07A5F 100%) !important;
-    color: #FFFFFF !important;
-  }
-
-  /* Secondary Buttons */
-  html.light .nav-glow-btn-inner.bg-white\/10 {
-    background-color: #E4E4EC !important;
-    color: #3D405B !important;
-    border: 1px solid #E8D9D6 !important;
-  }
-
-  /* ── Feature & Workflow Icon Cards (Soft Tints) ── */
-  html.light .card-conic-glow-inner .bg-gradient-to-tr,
-  html.light .bg-cyan-500\/20,
-  html.light .bg-indigo-500\/20,
-  html.light .bg-fuchsia-500\/20 {
-    background: #F6DEDC !important;
-    border: 1px solid #E8D9D6 !important;
-    color: #B23A48 !important;
-  }
-
-  html.light .card-conic-glow-inner .bg-gradient-to-tr svg,
-  html.light .card-conic-glow-inner svg {
-    color: #B23A48 !important;
-  }
-
-  /* Workflow Step Badges (Slate Navy Accent) */
-  html.light .bg-fuchsia-500\/20.border-fuchsia-400\/40 {
-    background: #E4E4EC !important;
-    color: #3D405B !important;
-    border-color: #E8D9D6 !important;
-    box-shadow: 0 2px 10px rgba(61, 64, 91, 0.1) !important;
-  }
-
-  /* ── Hero Container ── */
-  html.light .bg-hero-card {
-    background: linear-gradient(135deg, #F5E9E7 0%, #EDDAD7 100%) !important;
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: 0 10px 40px rgba(178, 58, 72, 0.08), 0 2px 8px rgba(43, 35, 32, 0.04) !important;
-  }
-
-  html.light .bg-hero-card h1 {
-    color: #2B2320 !important;
-  }
-
-  html.light .bg-hero-card p {
-    color: #6B5F5C !important;
-  }
-
-  /* Hero Ambient Glows */
-  html.light .bg-cyan-400\/20 {
-    background-color: rgba(178, 58, 72, 0.12) !important;
-  }
-  html.light .bg-fuchsia-500\/20 {
-    background-color: rgba(224, 122, 95, 0.12) !important;
-  }
-
-  /* ── Form Inputs & Dropdowns (Excluding Textareas) ── */
-  html.light input:not([type="checkbox"]):not([type="radio"]),
-  html.light select,
-  html.light .input-box {
-    background-color: #FFFFFF !important;
-    background-image: none !important;
-    border: 1px solid #E8D9D6 !important;
-    box-shadow: 0 2px 8px rgba(178, 58, 72, 0.06), 0 1px 3px rgba(43, 35, 32, 0.04) !important;
-    color: #2B2320 !important;
-  }
-
-  html.light input::placeholder,
-  html.light select::placeholder {
-    color: #8E7E7A !important;
-    opacity: 1 !important;
-  }
-
-  html.light input:focus,
-  html.light select:focus {
-    border-color: #B23A48 !important;
-    box-shadow: 0 0 0 3px rgba(178, 58, 72, 0.15), 0 4px 12px rgba(178, 58, 72, 0.08) !important;
-  }
-
-  /* ── Page Footer Bar (Full-Width Main Footer Only) ── */
-  html.light footer.border-t,
-  html.light body > footer {
-    background-color: #EDDAD7 !important;
-    background-image: none !important;
-    border-top: 1px solid #E8D9D6 !important;
-    box-shadow: 0 -4px 20px rgba(43, 35, 32, 0.04) !important;
-    color: #6B5F5C !important;
-  }
-
-  /* ── Logo ── */
-  html.light .bg-cyan-500\/10 {
-    background-color: #F6DEDC !important;
-    border-color: transparent !important;
-    color: #B23A48 !important;
-  }
-
-  html.light .bg-cyan-500\/10 svg {
-    color: #B23A48 !important;
-  }
-
-  html.light .text-cyan-300 {
-    color: #E07A5F !important;
-  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
 }
 
-/* Custom Hero Radial & Gradient Background */
-.bg-hero-card {
-  background: linear-gradient(125deg, #2e0854 0%, #1e1b4b 30%, #0369a1 70%, #06b6d4 100%);
-}
-
-/* Animated Rotating Conic Broken Border Base Effect */
-@keyframes spin-conic-border {
-  from {
-    transform: rotate(0deg);
+/* =====================================================
+   Shared component classes
+   ===================================================== */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold text-sm whitespace-nowrap select-none;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   }
-  to {
-    transform: rotate(360deg);
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.07);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
   }
+  .btn:active:not(:disabled) { transform: translateY(0) scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .btn-primary { @apply bg-accent text-on-accent; }
+  .btn-brand { @apply bg-brand text-on-brand; }
+  .btn-outline { @apply border border-line-strong text-fg bg-transparent font-medium; }
+  .btn-ghost { @apply border border-line text-fg bg-transparent font-medium; }
+  .btn-danger { @apply bg-danger text-white; }
+  .btn-icon { @apply h-10 w-10 p-0 border border-line bg-transparent text-fg; }
+
+  .card { @apply rounded-[18px] border border-line bg-surface; }
+  .card-hover { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease; }
+  .card-hover:hover { transform: translateY(-6px); box-shadow: 0 22px 44px rgba(0, 0, 0, 0.14); }
+  .card-hover .card-icon { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .card-hover:hover .card-icon { transform: rotate(-8deg) scale(1.1); }
+
+  .field {
+    @apply w-full h-11 rounded-xl border border-line bg-bg px-3.5 text-sm text-fg outline-none;
+    transition: border-color 0.2s ease, box-shadow 0.25s ease;
+  }
+  .field::placeholder { color: var(--muted); opacity: 0.8; }
+  .field:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  textarea.field { @apply h-auto py-3 resize-none; }
+
+  .label { @apply flex flex-col gap-1.5 text-[13px] font-medium text-fg; }
+  .eyebrow { @apply font-mono text-[11px] uppercase tracking-[0.12em] text-muted; }
+
+  .badge { @apply inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-xs font-semibold; }
+  .badge-dot { @apply h-1.5 w-1.5 rounded-full bg-current; }
+  .badge-ready { @apply bg-ok-bg text-ok-fg; }
+  .badge-generating { @apply bg-warn-bg text-warn-fg; }
+  .badge-queued { @apply bg-info-bg text-info-fg; }
+  .badge-failed { @apply bg-err-bg text-err-fg; }
+
+  .alert-error { @apply rounded-xl bg-err-bg px-4 py-3 text-sm font-medium text-err-fg; }
+  .alert-success { @apply rounded-xl bg-ok-bg px-4 py-3 text-sm font-medium text-ok-fg; }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0 1.5px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    padding-bottom: 2px;
+    transition: background-size 0.3s ease;
+  }
+  .link-underline:hover { background-size: 100% 1.5px; }
 }
 
-/* Global Universal Button with Rotating Conic Broken Border Animation & Scale */
-.nav-glow-btn,
-.btn-pill-glow,
-.btn-pill-secondary,
-.btn-primary,
-.btn-secondary,
-.btn-accent {
-  @apply relative inline-flex items-center justify-center overflow-hidden rounded-full p-[2px] border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer;
-}
+/* =====================================================
+   Motion (all disabled for prefers-reduced-motion)
+   ===================================================== */
+.anim-up { animation: bpUp 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-pop { animation: bpPop 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-fade { animation: bpFade 0.25s ease both; }
+.anim-msg { animation: bpMsg 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-panel { animation: bpPanel 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.2s; } .d3 { animation-delay: 0.3s; }
+.d4 { animation-delay: 0.45s; } .d5 { animation-delay: 0.6s; }
 
-.nav-glow-btn::before,
-.btn-pill-glow::before,
-.btn-pill-secondary::before,
-.btn-primary::before,
-.btn-secondary::before,
-.btn-accent::before {
-  content: '';
+.anim-float { animation: bpFloat 7s ease-in-out infinite; }
+.anim-pulse { animation: bpPulse 1.4s ease-in-out infinite; }
+.anim-blink { animation: bpBlink 1s steps(1) infinite; }
+.anim-spin-slow { animation: bpSpin 3s linear infinite; }
+.anim-spin-hover:hover svg { animation: bpSpin 0.6s ease; }
+.anim-bounce-y { animation: bpBounce 1.2s ease-in-out infinite; }
+.anim-tilt { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.anim-tilt:hover { transform: perspective(1100px) rotateY(-5deg) rotateX(3deg) scale(1.01); }
+
+.typing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: bpDot 1.2s ease-in-out infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+.shimmer { position: relative; overflow: hidden; }
+.shimmer::after {
+  content: "";
   position: absolute;
-  inset: -150%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 210deg,
-    #B23A48 240deg,
-    #E07A5F 300deg,
-    transparent 360deg
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: bpShimmer 1.8s ease-in-out infinite;
 }
 
-.nav-glow-btn:hover::before,
-.btn-pill-glow:hover::before,
-.btn-pill-secondary:hover::before,
-.btn-primary:hover::before,
-.btn-secondary:hover::before,
-.btn-accent:hover::before {
-  opacity: 1;
-  animation: spin-conic-border 2s linear infinite;
-}
-
-.nav-glow-btn-inner {
-  @apply relative inline-flex h-full w-full items-center justify-center rounded-full bg-[#161b26] px-4.5 py-1.5 text-xs font-bold text-white transition-colors duration-300 z-10;
-}
-
-/* Enhanced Box Border Glow Utilities */
-.box-glow-cyan {
-  @apply border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.15)] transition-all duration-500 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.35)];
-}
-
-.box-glow-fuchsia {
-  @apply border border-fuchsia-500/30 shadow-[0_0_15px_rgba(232,121,249,0.15)] transition-all duration-500 hover:border-fuchsia-400 hover:shadow-[0_0_30px_rgba(232,121,249,0.35)];
-}
-
-.box-glow-indigo {
-  @apply border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)] transition-all duration-500 hover:border-indigo-400 hover:shadow-[0_0_30px_rgba(99,102,241,0.35)];
-}
-
-/* Interactive Card Scale & Diagonal Glowing Shine Effect */
-.glow-card-interactive {
-  @apply relative overflow-hidden transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] cursor-pointer;
-}
-
-.glow-card-interactive::before {
-  content: '';
+.shine::after {
+  content: "";
   position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 300%;
-  height: 300%;
-  background: linear-gradient(
-    135deg,
-    transparent 42%,
-    rgba(255, 255, 255, 0.22) 50%,
-    transparent 58%
-  );
-  transform: translateY(-100%);
-  transition: transform 0.8s ease-in-out;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.glow-card-interactive:hover::before {
-  transform: translateY(100%);
-}
-
-/* Rotating Broken Conic Border Glow Card for Features & Workflow */
-.card-conic-glow {
-  @apply relative overflow-hidden rounded-2xl p-[1.5px] border border-white/15 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1.5 hover:border-transparent cursor-pointer;
-}
-
-.card-conic-glow::before {
-  content: '';
-  position: absolute;
-  inset: -150%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg 210deg,
-    #B23A48 240deg,
-    #E07A5F 300deg,
-    transparent 360deg
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.card-conic-glow:hover::before {
-  opacity: 1;
-  animation: spin-conic-border 3s linear infinite;
-}
-
-.card-conic-glow-inner {
-  @apply relative rounded-2xl bg-gradient-to-b from-[#161a29]/95 to-[#0e111a]/95 p-7 backdrop-blur-xl h-full w-full z-10;
-}
-
-/* Animated Underline Sweep for Nav Links */
-.nav-link-animated {
-  @apply relative py-1 text-xs font-bold uppercase tracking-wider text-slate-200 transition-colors duration-300 hover:text-cyan-300;
-}
-
-.nav-link-animated::after {
-  content: '';
-  position: absolute;
+  top: 0;
   bottom: 0;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background: linear-gradient(90deg, #B23A48, #E07A5F);
-  border-radius: 9999px;
-  box-shadow: 0 0 8px rgba(178, 58, 72, 0.8);
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 40%;
+  left: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: bpShine 3.6s ease-in-out 1.6s infinite;
+}
+.btn .btn-arrow { transition: transform 0.2s ease; }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+.btn:hover .btn-spin { transform: rotate(90deg); }
+.btn-spin { transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+/* Landing hero */
+.orb { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; }
+.orb-drift-1 { animation: bpDrift1 18s ease-in-out infinite alternate; }
+.orb-drift-2 { animation: bpDrift2 22s ease-in-out infinite alternate; }
+.rotate-words { display: inline-grid; vertical-align: bottom; }
+.rotate-words > * { grid-area: 1 / 1; opacity: 0; animation: bpWord 9s ease-in-out infinite; }
+.rotate-words > *:nth-child(2) { animation-delay: 3s; }
+.rotate-words > *:nth-child(3) { animation-delay: 6s; }
+.type-loop { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; width: 0; animation: bpType 8s steps(44) 1.2s infinite; }
+.code-line { opacity: 0; animation: bpLine 0.5s ease forwards; }
+.pop-in { opacity: 0; animation: bpPop 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+
+/* Feature mini illustrations */
+.seq-in { opacity: 0; animation: bpSeq 4s ease infinite; }
+.chat-1 { opacity: 0; animation: bpChat1 5s ease infinite; }
+.chat-2 { display: none; animation: bpChat2 5s steps(1) infinite; }
+.chat-3 { opacity: 0; animation: bpChat3 5s ease infinite; }
+.scan-line { animation: bpScan 4s ease-in-out infinite; }
+.tab-slide { animation: bpSlide 6s ease-in-out infinite; }
+.file-drop { opacity: 0; animation: bpDrop 2.4s ease-in infinite; }
+
+/* How-it-works pipeline */
+.flow-dash { animation: bpDash 1s linear infinite; }
+.flow-travel { animation: bpTravel 6s ease-in-out infinite; }
+.flow-node { opacity: 0; animation: bpNode 6s ease infinite; }
+.flow-out { animation: bpOut 6s ease infinite; }
+@media (max-width: 767px) { .flow-track { display: none; } }
+
+/* Scroll-driven reveal + progress (Chromium); falls back to static */
+.scroll-progress { transform-origin: left; transform: scaleX(0); }
+@supports (animation-timeline: view()) {
+  .reveal { animation: bpReveal linear both; animation-timeline: view(); animation-range: entry 0% cover 28%; }
+  .scroll-progress { animation: bpGrowX linear both; animation-timeline: scroll(root); }
 }
 
-.nav-link-animated:hover::after {
-  width: 100%;
+@keyframes bpUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes bpPop { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes bpFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bpMsg { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes bpPanel { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+@keyframes bpReveal { from { opacity: 0; transform: translateY(48px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes bpGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes bpFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes bpPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
+@keyframes bpBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+@keyframes bpSpin { to { transform: rotate(360deg); } }
+@keyframes bpBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+@keyframes bpDot { 0%, 80%, 100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-4px); opacity: 1; } }
+@keyframes bpShimmer { to { transform: translateX(100%); } }
+@keyframes bpShine { 0% { left: -60%; } 35%, 100% { left: 130%; } }
+@keyframes bpDrift1 { from { transform: translate(0, 0) scale(1); } to { transform: translate(120px, 60px) scale(1.2); } }
+@keyframes bpDrift2 { from { transform: translate(0, 0) scale(1.1); } to { transform: translate(-140px, -40px) scale(0.9); } }
+@keyframes bpWord { 0% { opacity: 0; transform: translateY(40%); } 5%, 28% { opacity: 1; transform: none; } 33%, 100% { opacity: 0; transform: translateY(-40%); } }
+@keyframes bpType { 0% { width: 0; } 45%, 85% { width: 44ch; } 100% { width: 0; } }
+@keyframes bpLine { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+@keyframes bpSeq { 0% { opacity: 0; transform: translateX(-8px); } 10%, 75% { opacity: 1; transform: none; } 88%, 100% { opacity: 0; } }
+@keyframes bpChat1 { 0% { opacity: 0; transform: translateY(8px); } 8%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes bpChat2 { 0% { display: none; } 20% { display: inline-flex; } 45%, 100% { display: none; } }
+@keyframes bpChat3 { 0%, 44% { opacity: 0; transform: translateY(8px); } 52%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+@keyframes bpScan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(68px); } }
+@keyframes bpSlide { 0%, 28% { transform: translateX(0); } 33%, 61% { transform: translateX(100%); } 66%, 95% { transform: translateX(200%); } 100% { transform: translateX(0); } }
+@keyframes bpDrop { 0% { opacity: 0; transform: translateY(-6px); } 20% { opacity: 1; } 75% { opacity: 1; transform: translateY(46px) scale(0.9); } 100% { opacity: 0; transform: translateY(58px) scale(0.6); } }
+@keyframes bpDash { to { background-position: 20px 0; } }
+@keyframes bpTravel { 0% { left: 0%; } 90%, 100% { left: 100%; } }
+@keyframes bpNode { 0%, 14% { opacity: 1; transform: scale(1.08); } 22%, 100% { opacity: 0; transform: scale(1); } }
+@keyframes bpOut { 0% { opacity: 0.35; transform: translateY(6px); } 6%, 30% { opacity: 1; transform: none; } 40%, 100% { opacity: 0.35; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .code-line, .pop-in, .seq-in, .chat-1, .chat-3, .flow-out, .rotate-words > *:first-child { opacity: 1; }
+  .type-loop { width: auto; }
+  .file-drop, .flow-travel { display: none; }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0b0d13;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* ============================================
-   React Resizable Panels — Drag Handle Styles
-   ============================================ */
-
-/* Horizontal divider (col-resize) */
-[data-panel-resize-handle-id] {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Drag grip dots on horizontal dividers */
-.w-1[data-panel-resize-handle-id]::after {
-  content: '';
-  display: block;
-  width: 3px;
-  height: 24px;
-  border-radius: 2px;
-  background: rgba(148, 163, 184, 0.4);
-  transition: background 0.2s;
-}
-
-.w-1[data-panel-resize-handle-id]:hover::after {
-  background: rgba(178, 58, 72, 0.8);
-  box-shadow: 0 0 8px rgba(178, 58, 72, 0.4);
-}
-
-/* Drag grip dots on vertical dividers */
-.h-1[data-panel-resize-handle-id]::after {
-  content: '';
-  display: block;
-  height: 3px;
-  width: 24px;
-  border-radius: 2px;
-  background: rgba(148, 163, 184, 0.4);
-  transition: background 0.2s;
-}
-
-.h-1[data-panel-resize-handle-id]:hover::after {
-  background: rgba(178, 58, 72, 0.8);
-  box-shadow: 0 0 8px rgba(178, 58, 72, 0.4);
-}
+/* Hide scrollbars on horizontal strips (editor tabs) while keeping them scrollable */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

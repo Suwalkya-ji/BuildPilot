@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { getProjectApi, updateProjectApi } from "../api/project.api";
 import { chatWithProjectApi } from "../api/ai.api";
 import { useSocket } from "../hooks/useSocket";
-import { MessageSquare, Code2, Eye } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import Header from "../components/workspace/Header";
 import FileExplorer from "../components/workspace/FileExplorer";
@@ -43,16 +43,19 @@ const DragBar = ({ direction, onDelta }) => {
   return (
     <div
       onMouseDown={handleMouseDown}
-      className="group flex-shrink-0 relative hidden md:block"
-      style={{
-        width: direction === "h" ? 5 : "100%",
-        height: direction === "h" ? "100%" : 5,
-        background: "rgba(255,255,255,0.06)",
-        cursor: direction === "h" ? "col-resize" : "row-resize",
-        zIndex: 20,
-      }}
+      role="separator"
+      aria-orientation={direction === "h" ? "vertical" : "horizontal"}
+      aria-label="Resize panels"
+      className={`group relative z-20 hidden shrink-0 md:block ${
+        direction === "h" ? "h-full w-[5px] cursor-col-resize" : "h-[5px] w-full cursor-row-resize"
+      }`}
     >
-      <div className="absolute inset-0 group-hover:bg-cyan-400/40 transition-colors duration-150" />
+      <div
+        className={`absolute bg-line ${
+          direction === "h" ? "inset-y-0 left-1/2 w-px -translate-x-1/2" : "inset-x-0 top-1/2 h-px -translate-y-1/2"
+        }`}
+      />
+      <div className="absolute inset-0 transition-colors duration-150 group-hover:bg-accent/40" />
     </div>
   );
 };
@@ -193,16 +196,18 @@ const Workspace = () => {
   // ── Loading / error states ────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0b0d13]">
-        <Loader text="Loading your AI Workspace..." />
+      <div className="flex h-screen items-center justify-center bg-bg">
+        <Loader text="Loading your workspace…" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0b0d13] text-xs text-rose-400">
-        Error: {error?.response?.data?.message || error?.message}
+      <div className="flex h-screen items-center justify-center bg-bg p-4">
+        <div className="alert-error max-w-md" role="alert">
+          Error: {error?.response?.data?.message || error?.message}
+        </div>
       </div>
     );
   }
@@ -210,8 +215,18 @@ const Workspace = () => {
   const currentFileObj =
     files.find((f) => (f.path || f.filePath) === activeFile) || files[0] || {};
 
+  const mobileTabs = [
+    { id: "chat", label: "Chat" },
+    { id: "code", label: "Code" },
+    { id: "preview", label: "Preview" },
+  ];
+
+  const fileOptions = Array.from(
+    new Set(files.map((f) => f.path || f.filePath).filter(Boolean))
+  );
+
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0b0d13] text-slate-100">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-bg text-fg">
 
       {/* ── NAV ───────────────────────────────────────────── */}
       <Header
@@ -224,44 +239,39 @@ const Workspace = () => {
         onToggleFiles={() => setIsFilesOpen(!isFilesOpen)}
       />
 
-      {/* ── MOBILE WORKSPACE VIEWPORT TAB SWITCHER (Visible only on screens < md) ── */}
-      <div className="md:hidden flex items-center justify-around border-b border-white/10 bg-[#131722] p-1.5 text-xs font-bold font-mono">
-        <button
-          onClick={() => setMobileTab("chat")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-            mobileTab === "chat"
-              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-              : "text-slate-400 hover:text-white"
-          }`}
-        >
-          <MessageSquare className="h-3.5 w-3.5" /> AI Chat
-        </button>
-
-        <button
-          onClick={() => setMobileTab("code")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-            mobileTab === "code"
-              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-              : "text-slate-400 hover:text-white"
-          }`}
-        >
-          <Code2 className="h-3.5 w-3.5" /> Editor
-        </button>
-
-        <button
-          onClick={() => setMobileTab("preview")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-            mobileTab === "preview"
-              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-              : "text-slate-400 hover:text-white"
-          }`}
-        >
-          <Eye className="h-3.5 w-3.5" /> Preview
-        </button>
+      {/* ── MOBILE SEGMENTED CONTROL (< md) ── */}
+      <div
+        role="tablist"
+        aria-label="Workspace view"
+        className="mx-3.5 mt-3 grid shrink-0 grid-cols-3 gap-1 rounded-full border border-line bg-surface p-1 md:hidden"
+      >
+        {mobileTabs.map((tab) => {
+          const isActive = mobileTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls="mobile-panel"
+              onClick={() => setMobileTab(tab.id)}
+              className={`h-10 rounded-full text-[13px] transition-colors duration-300 ${
+                isActive ? "bg-brand font-semibold text-on-brand" : "font-medium text-muted hover:text-fg"
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* ── MOBILE ONLY SINGLE PANEL CONTENT ── */}
-      <div className="flex-1 md:hidden overflow-hidden flex flex-col">
+      <div
+        id="mobile-panel"
+        role="tabpanel"
+        key={mobileTab}
+        className="anim-panel flex min-h-0 flex-1 flex-col overflow-hidden md:hidden"
+      >
         {mobileTab === "chat" && (
           <div className="h-full w-full">
             <ChatPanel
@@ -273,16 +283,22 @@ const Workspace = () => {
         )}
 
         {mobileTab === "code" && (
-          <div className="h-full w-full flex flex-col bg-[#1e1e1e]">
-            <EditorTabs
-              openTabs={openTabs}
-              activeFile={activeFile}
-              onSelectTab={setActiveFile}
-              onCloseTab={handleCloseTab}
-              isFilesOpen={isFilesOpen}
-              onOpenFiles={() => setIsFilesOpen(true)}
-            />
-            <div className="flex-1 overflow-hidden">
+          <div className="flex h-full w-full flex-col gap-2.5 p-3.5">
+            <label className="relative block shrink-0">
+              <span className="sr-only">Current file</span>
+              <select
+                value={activeFile || ""}
+                onChange={(e) => handleSelectFile(e.target.value)}
+                className="field h-11 appearance-none pr-10 font-mono text-[13px]"
+              >
+                {fileOptions.length === 0 && <option value={activeFile || ""}>{activeFile || "No files yet"}</option>}
+                {fileOptions.map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            </label>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[14px] border border-line bg-editor">
               <MonacoEditor
                 activeFile={activeFile}
                 content={currentFileObj.content || ""}
@@ -294,18 +310,18 @@ const Workspace = () => {
 
         {mobileTab === "preview" && (
           <div className="h-full w-full">
-            <Preview files={files} projectId={projectId} />
+            <Preview files={files} />
           </div>
         )}
       </div>
 
       {/* ── DESKTOP 3-COLUMN BODY (Hidden on mobile < md) ── */}
-      <div className="hidden md:flex flex-1 overflow-hidden" ref={containerRef}>
+      <div className="hidden flex-1 overflow-hidden md:flex" ref={containerRef}>
 
         {/* COL 1 — File Explorer */}
         {isFilesOpen && (
           <>
-            <div style={{ width: fileW, flexShrink: 0 }} className="overflow-hidden">
+            <div style={{ width: fileW, flexShrink: 0 }} className="anim-up overflow-hidden">
               <FileExplorer
                 files={files}
                 activeFile={activeFile}
@@ -320,7 +336,7 @@ const Workspace = () => {
         )}
 
         {/* COL 2 — Code Editor (fills remaining space) */}
-        <div className="flex flex-1 flex-col overflow-hidden bg-[#1e1e1e]">
+        <div className="anim-up d1 flex min-w-0 flex-1 flex-col overflow-hidden bg-editor">
           <EditorTabs
             openTabs={openTabs}
             activeFile={activeFile}
@@ -344,11 +360,11 @@ const Workspace = () => {
         {/* COL 3 — Live Preview (top) + Chat (bottom) */}
         <div
           style={{ width: rightW, flexShrink: 0 }}
-          className="flex flex-col overflow-hidden"
+          className="anim-up d2 flex flex-col overflow-hidden bg-surface"
         >
           {/* Preview */}
           <div style={{ height: `${previewH}%` }} className="overflow-hidden">
-            <Preview files={files} projectId={projectId} />
+            <Preview files={files} />
           </div>
 
           {/* Drag: preview | chat */}
