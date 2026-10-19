@@ -22,7 +22,12 @@ const startServer = async () => {
 
     await connectRedis();
 
-    await createCollection();
+    // Vector search is optional at startup: chat falls back to no extra context
+    try {
+      await createCollection();
+    } catch (error) {
+      console.warn("Qdrant unavailable, starting without vector search:", error.message);
+    }
 
     server.listen(PORT, () => {
       console.log(`🚀 Server Running On Port ${PORT}`);
