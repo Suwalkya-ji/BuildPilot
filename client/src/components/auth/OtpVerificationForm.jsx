@@ -114,45 +114,46 @@ const OtpVerificationForm = ({ email, onBackToSignup, onSuccess }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-1.5">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600/30 via-indigo-600/30 to-cyan-400/30 border border-cyan-400/30 mb-2">
-          <ShieldCheck className="w-6 h-6 text-cyan-400" />
-        </div>
-        <h2 className="text-2xl font-extrabold text-white tracking-tight">Verify Your Email</h2>
-        <p className="text-xs text-slate-400 font-medium max-w-xs mx-auto">
-          We've sent a 6-digit security code to <br />
-          <span className="text-cyan-300 font-bold">{email}</span>
+    <div className="flex flex-col gap-6">
+      <span className="anim-pop d3 flex h-12 w-12 items-center justify-center rounded-[14px] bg-icon-tile text-icon-ink">
+        <ShieldCheck className="h-[22px] w-[22px]" aria-hidden="true" />
+      </span>
+      <div className="flex flex-col gap-1.5">
+        <h2 className="font-display text-4xl leading-tight text-fg">Verify your email</h2>
+        <p className="text-sm leading-relaxed text-muted">
+          We sent a 6-digit code to <strong className="break-all font-semibold text-fg">{email}</strong>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-[18px]">
         {error && (
-          <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-xs text-red-400 font-bold text-center">
+          <div className="alert-error" role="alert">
             {error}
           </div>
         )}
 
         {successMsg && (
-          <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs text-emerald-400 font-bold text-center">
+          <div className="alert-success" role="status">
             {successMsg}
           </div>
         )}
 
-        {/* 6-Digit OTP Box Grid */}
-        <div className="flex justify-between items-center gap-2 px-1">
+        {/* 6-digit OTP boxes */}
+        <div className="grid grid-cols-6 gap-2" role="group" aria-label="Verification code">
           {otp.map((digit, index) => (
             <input
               key={index}
               ref={(el) => (inputRefs.current[index] = el)}
               type="text"
               inputMode="numeric"
+              autoComplete={index === 0 ? "one-time-code" : "off"}
               maxLength={1}
               value={digit}
+              aria-label={`Digit ${index + 1}`}
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-11 h-13 rounded-xl bg-[#0b0d13]/90 border border-white/15 text-center text-lg font-bold text-cyan-300 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 focus:outline-none transition shadow-inner"
+              className="field h-14 min-w-0 px-0 text-center font-mono text-2xl font-semibold"
             />
           ))}
         </div>
@@ -160,37 +161,33 @@ const OtpVerificationForm = ({ email, onBackToSignup, onSuccess }) => {
         <button
           type="submit"
           disabled={isSubmitting || otp.join("").length !== 6}
-          className="nav-glow-btn w-full mt-2 disabled:opacity-50"
+          className="btn btn-primary h-12 w-full text-[15px]"
         >
-          <span className="nav-glow-btn-inner bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-400 w-full py-3 text-xs text-white font-bold flex items-center justify-center gap-2">
-            {isSubmitting ? "Verifying Code..." : "Verify & Continue"}
-          </span>
+          {isSubmitting ? "Verifying code..." : "Verify & continue"}
         </button>
 
-        {/* Resend OTP & Change Email Options */}
-        <div className="flex flex-col items-center gap-3 pt-2">
+        {/* Resend code & change email */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[13px] text-muted">
           <button
             type="button"
             onClick={handleResend}
             disabled={countdown > 0 || isResending}
-            className={`text-xs font-semibold flex items-center gap-1.5 transition ${
-              countdown > 0 ? "text-slate-500 cursor-not-allowed" : "text-cyan-400 hover:text-cyan-300"
+            className={`inline-flex items-center gap-1.5 transition-colors ${
+              countdown > 0 ? "cursor-not-allowed" : "cursor-pointer font-semibold text-accent-ink hover:text-fg"
             }`}
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isResending ? "animate-spin" : ""}`} />
-            <span>
-              {countdown > 0 ? `Resend code in ${countdown}s` : "Resend Verification Code"}
-            </span>
+            <RefreshCw className={`h-3.5 w-3.5 ${isResending ? "animate-spin" : ""}`} aria-hidden="true" />
+            <span>{countdown > 0 ? `Resend code in ${countdown}s` : "Resend code"}</span>
           </button>
 
           {onBackToSignup && (
             <button
               type="button"
               onClick={onBackToSignup}
-              className="text-[11px] text-slate-400 hover:text-slate-200 transition font-medium flex items-center gap-1 mt-1"
+              className="link-underline inline-flex cursor-pointer items-center gap-1 hover:text-fg"
             >
-              <ArrowLeft className="w-3 h-3" />
-              <span>Use a different email address</span>
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Use a different email</span>
             </button>
           )}
         </div>

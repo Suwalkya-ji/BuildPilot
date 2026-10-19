@@ -17,130 +17,130 @@ const DashboardLayout = () => {
   };
 
   const navLinks = [
-    { label: "Dashboard", path: "/dashboard" },
+    { label: "Projects", path: "/dashboard" },
   ];
 
+  const displayName = user?.name || "User";
+  const initials = user?.name
+    ? user.name.trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()
+    : "BP";
+
+  const avatar = (
+    <span
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand text-[13px] font-semibold text-on-brand"
+      aria-hidden="true"
+    >
+      {initials}
+    </span>
+  );
+
   return (
-    <div className="flex min-h-screen flex-col bg-[#0b0d13] text-slate-100 selection:bg-cyan-500 selection:text-white select-none">
-      {/* Clean Dashboard Top Header */}
-      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-[#131722]/90 px-6 shadow-xl backdrop-blur-xl">
-        <div className="flex items-center gap-8">
-          <Logo />
-          <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
-            {navLinks.map((link, idx) => (
-              <Link
-                key={idx}
-                to={link.path}
-                className={`nav-link-animated text-xs font-bold uppercase tracking-wider transition-colors ${
-                  location.pathname === link.path
-                    ? "text-cyan-300 font-extrabold"
-                    : "text-slate-300 hover:text-white"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <div className="h-4 w-px bg-white/10 hidden sm:block" />
-
-          {/* User Profile & Logout Action — desktop */}
-          <div className="hidden sm:flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 text-xs font-extrabold text-white shadow-md">
-              {user?.name ? user.name.slice(0, 2).toUpperCase() : "BP"}
-            </div>
-            <div className="hidden sm:block text-left">
-              <p className="text-xs font-bold text-white truncate">{user?.name || "User"}</p>
-              <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Active
-              </span>
-            </div>
-
-            <button
-              onClick={handleLogout}
-              aria-label="Sign out of BuildPilot"
-              className="ml-2 flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/30 hover:scale-105 active:scale-90 active:translate-y-0.5 transition-all duration-150 cursor-pointer shadow-sm"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Sign Out</span>
-            </button>
+    <div className="flex min-h-screen flex-col bg-bg text-fg">
+      <header className="sticky top-0 z-40 border-b border-line bg-surface">
+        <div className="mx-auto flex h-[68px] w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center gap-7">
+            <Logo />
+            <nav className="hidden items-center gap-1 text-sm md:flex" aria-label="Main navigation">
+              {navLinks.map((link) => {
+                const active = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    aria-current={active ? "page" : undefined}
+                    className={`inline-flex h-9 items-center rounded-full px-3.5 transition-colors ${
+                      active ? "bg-icon-tile font-semibold text-fg" : "text-muted hover:text-fg"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileMenuOpen((v) => !v)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileMenuOpen}
-            className="sm:hidden flex items-center justify-center h-8 w-8 rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:scale-105 active:scale-90 active:translate-y-0.5 transition cursor-pointer"
-          >
-            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
+          <div className="flex shrink-0 items-center gap-3">
+            <ThemeToggle />
+
+            {/* User + sign out — desktop */}
+            <div className="hidden items-center gap-3 sm:flex">
+              {avatar}
+              <span className="max-w-[160px] truncate text-sm font-medium">{displayName}</span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Sign out of BuildPilot"
+                className="btn btn-ghost h-9 px-3.5 text-[13px] text-muted"
+              >
+                Sign out
+              </button>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              className="btn btn-icon sm:hidden"
+            >
+              {mobileMenuOpen ? <X className="h-[18px] w-[18px]" /> : <Menu className="h-[18px] w-[18px]" />}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile drawer */}
       {mobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
+        <div className="anim-fade fixed inset-0 top-[68px] z-30 bg-scrim sm:hidden" onClick={() => setMobileMenuOpen(false)}>
           <div
-            className="absolute right-0 top-16 w-64 bg-[#131722] border-l border-white/10 h-[calc(100vh-4rem)] flex flex-col p-5 gap-4 shadow-2xl"
+            className="anim-panel absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col gap-4 border-l border-line bg-surface p-5 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* User info */}
-            <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 text-xs font-extrabold text-white shadow-md">
-                {user?.name ? user.name.slice(0, 2).toUpperCase() : "BP"}
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white">{user?.name || "User"}</p>
-                <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Active
-                </span>
-              </div>
+            <div className="flex items-center gap-3 border-b border-line pb-4">
+              {avatar}
+              <p className="min-w-0 truncate text-sm font-medium">{displayName}</p>
             </div>
 
             {/* Nav links */}
-            <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
-              {navLinks.map((link, idx) => (
-                <Link
-                  key={idx}
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition ${
-                    location.pathname === link.path
-                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                      : "text-slate-300 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <nav className="flex flex-col gap-1" aria-label="Mobile navigation">
+              {navLinks.map((link) => {
+                const active = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex h-11 items-center rounded-full px-4 text-sm transition-colors ${
+                      active ? "bg-icon-tile font-semibold text-fg" : "text-muted hover:text-fg"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="mt-auto">
               <button
+                type="button"
                 onClick={handleLogout}
                 aria-label="Sign out of BuildPilot"
-                className="w-full flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-bold text-rose-300 hover:bg-rose-500/20 active:scale-95 transition cursor-pointer"
+                className="btn btn-ghost h-11 w-full"
               >
-                <LogOut className="h-3.5 w-3.5" /> Sign Out
+                <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+      {/* Content */}
+      <main className="w-full flex-1 py-10 pb-16">
         <Outlet />
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-[#131722]/80 px-6 py-4 text-center text-xs text-slate-400 font-medium">
-        BuildPilot AI — Full-Stack MERN Development Platform
-      </footer>
     </div>
   );
 };

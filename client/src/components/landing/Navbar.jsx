@@ -8,41 +8,35 @@ const Navbar = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <header className="sticky top-4 z-50 mx-auto max-w-5xl px-2 sm:px-4 select-none !bg-transparent !border-none !shadow-none">
-      <div className="flex h-14 items-center justify-between rounded-full border border-white/20 bg-[#161b26]/90 px-3 sm:px-6 shadow-2xl shadow-indigo-950/40 backdrop-blur-2xl transition-all duration-300">
-        <Logo />
+    <header className="anim-up flex flex-wrap items-center justify-between gap-4 py-6">
+      <Logo />
 
-        <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="nav-link-animated">Features</a>
-          <a href="#how-it-works" className="nav-link-animated">Workflow</a>
-        </div>
+      <nav aria-label="Primary" className="hidden items-center gap-7 text-sm text-muted md:flex">
+        <a href="#features" className="link-underline hover:text-fg">Features</a>
+        <a href="#workflow" className="link-underline hover:text-fg">How it works</a>
+      </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <ThemeToggle />
+      <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+        <ThemeToggle className="h-11 w-11" />
 
-          {isAuthenticated ? (
-            <Link to="/dashboard" className="nav-glow-btn shrink-0">
-              <span className="nav-glow-btn-inner bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500 text-white font-bold flex items-center gap-1.5 whitespace-nowrap !px-3 sm:!px-4">
-                <LayoutDashboard className="h-3.5 w-3.5" />
-                <span>Dashboard</span>
-              </span>
+        {isAuthenticated ? (
+          <Link to="/dashboard" className="btn btn-primary h-11 px-5">
+            <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+            Dashboard
+          </Link>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="link-underline inline-flex h-11 items-center px-2 text-sm font-medium text-fg sm:px-4"
+            >
+              Log in
             </Link>
-          ) : (
-            <>
-              <Link to="/login" className="nav-glow-btn shrink-0">
-                <span className="nav-glow-btn-inner !text-white font-bold whitespace-nowrap !px-2.5 sm:!px-4 text-xs">
-                  Log In
-                </span>
-              </Link>
-
-              <Link to="/signup" className="nav-glow-btn shrink-0">
-                <span className="nav-glow-btn-inner bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-cyan-400 !text-white font-bold whitespace-nowrap !px-3 sm:!px-4 text-xs">
-                  Get Started
-                </span>
-              </Link>
-            </>
-          )}
-        </div>
+            <Link to="/signup" className="btn btn-primary h-11 px-4 sm:px-5">
+              Get started
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
