@@ -3,11 +3,14 @@ dotenv.config();
 import IORedis from "ioredis";
 
 
-const bullmqConnection = new IORedis({
-  host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT),
-  maxRetriesPerRequest: null,
-});
+// REDIS_URL (e.g. Render Key Value) takes priority over REDIS_HOST/REDIS_PORT
+const bullmqConnection = process.env.REDIS_URL
+  ? new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null })
+  : new IORedis({
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      maxRetriesPerRequest: null,
+    });
 
 bullmqConnection.on("connect", () => {
   console.log("🟢 BullMQ Redis Connected");

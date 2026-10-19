@@ -1,11 +1,16 @@
 import { createClient } from "redis";
 
-const redisClient = createClient({
-  socket: {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-  },
-});
+// REDIS_URL (e.g. Render Key Value) takes priority over REDIS_HOST/REDIS_PORT
+const redisClient = createClient(
+  process.env.REDIS_URL
+    ? { url: process.env.REDIS_URL }
+    : {
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT),
+        },
+      }
+);
 
 redisClient.on("connect", () => {
   console.log("🟢 Redis Connected");

@@ -1,0 +1,56 @@
+# Render Blueprint: backend API (Express + Socket.IO + BullMQ worker) and Redis.
+# The frontend is deployed separately on Vercel (see client/vercel.json).
+# Values marked `sync: false` are asked for when you create the Blueprint.
+services:
+  - type: web
+    name: buildpilot-api
+    runtime: node
+    rootDir: server
+    # Free instances sleep after 15 min idle; switch to "starter" to stay always on
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: buildpilot-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: GEMINI_MODEL
+        value: gemini-3.8-flash
+      - key: SENDER_NAME
+        value: BuildPilot AI
+      - key: CLIENT_URL # your Vercel URL, e.g. https://buildpilot.vercel.app
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: HF_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SMTP_USER
+        sync: false
+      - key: SENDER_EMAIL
+        sync: false
+
+  - type: keyvalue
+    name: buildpilot-redis
+    plan: free
+    # BullMQ needs Redis to never evict queue keys
+    maxmemoryPolicy: noeviction
+    ipAllowList: [] # only reachable from services in this Render account
