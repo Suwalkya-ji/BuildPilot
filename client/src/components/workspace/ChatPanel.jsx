@@ -3,7 +3,8 @@ import { Sparkles } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 
-const ChatPanel = ({ messages = [], onSendMessage, isLoading }) => {
+// `activity` is the live status text ("Updating 5 files"); null when idle
+const ChatPanel = ({ messages = [], onSendMessage, isLoading, activity }) => {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -12,7 +13,7 @@ const ChatPanel = ({ messages = [], onSendMessage, isLoading }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages, activity]);
 
   // Filter out consecutive duplicate messages
   const cleanMessages = messages.filter((msg, idx) => {
@@ -40,7 +41,7 @@ const ChatPanel = ({ messages = [], onSendMessage, isLoading }) => {
           cleanMessages.map((msg, idx) => <MessageBubble key={idx} message={msg} />)
         )}
 
-        {isLoading && (
+        {activity && (
           <div
             className="anim-msg inline-flex items-center gap-2.5 self-start rounded-full bg-warn-bg px-3.5 py-2.5 text-[12.5px] font-medium text-warn-fg"
             role="status"
@@ -50,7 +51,7 @@ const ChatPanel = ({ messages = [], onSendMessage, isLoading }) => {
               <span className="typing-dot" />
               <span className="typing-dot" />
             </span>
-            Updating your code…
+            {activity}
           </div>
         )}
         <div ref={messagesEndRef} />
