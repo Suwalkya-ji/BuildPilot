@@ -2,7 +2,7 @@
 
 **Describe a website in plain English. Get a working React + Tailwind app you can edit, preview and download.**
 
-BuildPilot uses Google Gemini to generate the code, then lets you refine it by chatting with the AI, editing in a built-in code editor, and watching a live preview update as you go.
+BuildPilot uses Google Gemini to generate the code, then lets you refine it by chatting with the AI, editing in a built-in code editor, and watching a live preview update as you go. Chat edits use **RAG (Retrieval-Augmented Generation)** with a **Qdrant vector database**, so the AI works from the parts of your project that matter for each request.
 
 ---
 
@@ -11,7 +11,8 @@ BuildPilot uses Google Gemini to generate the code, then lets you refine it by c
 | Feature | What it does |
 | :--- | :--- |
 | **AI generation** | Turn a prompt into a complete multi-file React + Tailwind project. |
-| **AI chat edits** | Ask for changes in plain English. The AI looks up the relevant files before editing. |
+| **AI chat edits** | Ask for changes in plain English. The AI edits your existing code instead of starting over. |
+| **RAG with a vector database** | Every file is stored as an embedding in Qdrant. Each chat request finds the most relevant files and gives them to the AI as context. |
 | **Live preview** | See the site running in the browser as soon as code is generated or changed. |
 | **Code editor** | Monaco editor with file explorer, tabs and Ctrl/Cmd + S to save. |
 | **Mobile friendly** | A simple Chat / Code / Preview layout on phones. |
@@ -32,6 +33,34 @@ BuildPilot uses Google Gemini to generate the code, then lets you refine it by c
 
 ---
 
+## RAG and the vector database
+
+BuildPilot uses **RAG (Retrieval-Augmented Generation)** so chat edits are based on your actual code.
+
+**Storing the code (indexing)**
+
+- Each project file is turned into an *embedding* — a list of 384 numbers that captures what the code is about — using the HuggingFace model `all-MiniLM-L6-v2`.
+- The embeddings are saved in **Qdrant** (collection `project_files`) along with the file path, its content and the project ID.
+- The index is refreshed after the first generation, after every chat edit and after every manual save, and removed when a project is deleted.
+
+**Using it in chat (retrieval)**
+
+1. Your chat message is turned into an embedding the same way.
+2. Qdrant finds the **5 most similar files** in *your* project (cosine similarity, filtered by project ID).
+3. Those files are added to the prompt as "relevant project context", together with the chat history and the current files.
+4. Gemini returns the updated files, which are saved and re-indexed.
+
+If the vector search is unavailable, chat still works — the AI simply gets the current files without the extra context.
+
+| File | Role |
+| :--- | :--- |
+| `server/src/services/embedding.service.js` | Creates embeddings with HuggingFace |
+| `server/src/services/vector.service.js` | Saves, refreshes and deletes a project's embeddings |
+| `server/src/services/rag.service.js` | Finds the most relevant files for a message |
+| `server/src/services/qdrant.service.js` | Creates the Qdrant collection on startup |
+
+---
+
 ## Tech stack
 
 | Part | Built with |
@@ -39,8 +68,9 @@ BuildPilot uses Google Gemini to generate the code, then lets you refine it by c
 | **Frontend** | React 19, Vite, Tailwind CSS v4, React Router, TanStack Query |
 | **Editor & preview** | Monaco Editor, Babel (iframe preview), Sandpack (full-screen preview) |
 | **Backend** | Node.js, Express 5, Socket.IO |
-| **Data** | MongoDB (Mongoose), Redis, Qdrant |
-| **AI** | Google Gemini (`gemini-3.8-flash` by default), HuggingFace embeddings |
+| **Data** | MongoDB (Mongoose), Redis |
+| **AI** | Google Gemini (`gemini-3.8-flash` by default) |
+| **RAG / vector search** | Qdrant vector database, HuggingFace embeddings (`all-MiniLM-L6-v2`) |
 | **Email** | Brevo |
 
 ---
@@ -171,7 +201,7 @@ BuildPilot/
 │       ├── middleware/     Auth, validation and errors
 │       ├── models/         Database schemas
 │       ├── routes/         API routes
-│       ├── services/       AI, search, email and project logic
+│       ├── services/       AI, RAG / vector search, email and project logic
 │       ├── sockets/        Live-update connections
 │       └── workers/        Background generation worker
 └── docker-compose.yml      Redis, Qdrant and app containers
