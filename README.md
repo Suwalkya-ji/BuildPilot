@@ -1,152 +1,185 @@
-# 🚀 BuildPilot AI — AI-Powered Website Builder & Code Generator
+# BuildPilot AI
 
-BuildPilot AI is a full-stack, state-of-the-art web application that leverages generative AI (Google Gemini & HuggingFace embeddings) and vector retrieval (Qdrant) to turn natural language prompts into complete, interactive web applications with real-time streaming updates and live browser preview.
+**Describe a website in plain English. Get a working React + Tailwind app you can edit, preview and download.**
 
----
-
-## ✨ Features
-
-- **🤖 AI-Driven Site Generation**: Uses Google Gemini to generate structured React components and HTML/CSS styling based on user prompts.
-- **⚡ Live Interactive Preview**: Instant in-browser preview of generated code in the workspace (iframe + Babel), plus a full-screen Sandpack preview page.
-- **🎨 Premium Dual Theme & Responsive UI**: Custom "Rosewood & Slate" Light Mode Theme + Dark Mode toggle with responsive mobile viewport IDE layouts.
-- **🔐 Secure Auth & Email OTP**: JWT Authentication with `bcrypt` password hashing, 6-digit OTP verification, and Email Password Reset via Brevo SMTP.
-- **🔄 Async Queue Processing**: Heavy AI generation tasks are queued using **BullMQ** and **Redis** for resilient, non-blocking performance.
-- **📡 Real-Time Socket.IO Updates**: Instant progress notifications streamed directly to the frontend during site generation steps.
-- **🧠 Vector Search RAG**: Integrated **Qdrant Vector DB** and **HuggingFace Inference API** for context-aware code generation and component retrieval.
-- **🐳 Docker Ready**: Full multi-container Docker setup (`docker-compose`) for one-command local testing and seamless cloud deployment.
+BuildPilot uses Google Gemini to generate the code, then lets you refine it by chatting with the AI, editing in a built-in code editor, and watching a live preview update as you go.
 
 ---
 
-## 🛠️ Tech Stack
+## Features
 
-### Frontend (`client/`)
-- **Framework**: React 19 + Vite 8
-- **Styling**: Tailwind CSS v4 + Rosewood & Slate Design Tokens
-- **Code Preview**: `@codesandbox/sandpack-react`
-- **Code Editor**: `@monaco-editor/react`
-- **Routing & State**: React Router v7, `@tanstack/react-query`
-- **Icons & UI**: Lucide React, Sonner (Toasts)
-
-### Backend (`server/`)
-- **Runtime**: Node.js ES Modules
-- **Framework**: Express v5
-- **Database**: MongoDB (via Mongoose)
-- **Queue System**: BullMQ + Redis (`ioredis`)
-- **Vector Database**: Qdrant Vector DB
-- **Email Service**: Brevo API & SMTP (`nodemailer`)
-- **AI Integrations**: Google Gen AI SDK (Gemini, default `gemini-3.8-flash`), HuggingFace Inference (`all-MiniLM-L6-v2`)
-- **Real-Time Engine**: Socket.IO
+| Feature | What it does |
+| :--- | :--- |
+| **AI generation** | Turn a prompt into a complete multi-file React + Tailwind project. |
+| **AI chat edits** | Ask for changes in plain English. The AI looks up the relevant files before editing. |
+| **Live preview** | See the site running in the browser as soon as code is generated or changed. |
+| **Code editor** | Monaco editor with file explorer, tabs and Ctrl/Cmd + S to save. |
+| **Mobile friendly** | A simple Chat / Code / Preview layout on phones. |
+| **Runnable export** | Download a ZIP that runs with `npm install` and `npm run dev`. |
+| **Light & dark themes** | Light by default, with a dark mode and subtle animations. |
+| **Secure accounts** | Email sign-up with a 6-digit code, JWT login and password reset. |
+| **Live progress** | Generation runs in a background queue and reports progress in real time. |
 
 ---
 
-## 📂 Project Structure
+## How it works
 
-```text
-BuildPilot/
-├── client/                     # React Frontend Application
-│   ├── src/
-│   │   ├── api/                # Axios API Client configuration
-│   │   ├── components/         # UI Components (Landing, Builder, Auth, Editor)
-│   │   ├── context/            # Auth & Theme Context Providers
-│   │   ├── hooks/              # Custom React Hooks (useSocket, useAuth, useTheme)
-│   │   └── pages/              # App Pages (Home, Dashboard, Generator)
-│   ├── .env.example            # Client environment variable template
-│   └── vite.config.js          # Vite build configuration
-├── server/                     # Express Backend API & Worker
-│   ├── src/
-│   │   ├── config/             # DB, Redis, Qdrant, Socket.IO configurations
-│   │   ├── controllers/        # Express route handlers (auth, project, ai)
-│   │   ├── middleware/         # Auth & Error handling middlewares
-│   │   ├── models/             # Mongoose schemas (User, Project, Otp, PasswordReset)
-│   │   ├── routes/             # API routes (/api/v1/auth, /projects, /ai)
-│   │   ├── services/           # AI, Embedding, Email, Qdrant & Generation services
-│   │   └── workers/            # BullMQ worker (runs inside the server process)
-│   ├── Dockerfile              # Multi-stage production container recipe
-│   └── .env.example            # Server environment variable template
-├── docker-compose.yml          # Full-stack multi-container Docker compose
-└── README.md                   # Project Documentation
-```
+1. You sign up and create a project with a prompt.
+2. The request goes into a background queue (BullMQ + Redis).
+3. Gemini generates the project files, which are saved to MongoDB.
+4. The files are indexed in Qdrant so later chat edits can find the right code.
+5. The browser receives updates over Socket.IO and shows the editor and preview.
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Tech stack
 
-### Prerequisites
-- Node.js (v20 or higher)
-- Docker & Docker Compose (for local Redis & Qdrant)
-- MongoDB instance (Atlas URI or local)
+| Part | Built with |
+| :--- | :--- |
+| **Frontend** | React 19, Vite, Tailwind CSS v4, React Router, TanStack Query |
+| **Editor & preview** | Monaco Editor, Babel (iframe preview), Sandpack (full-screen preview) |
+| **Backend** | Node.js, Express 5, Socket.IO |
+| **Data** | MongoDB (Mongoose), Redis, Qdrant |
+| **AI** | Google Gemini (`gemini-3.8-flash` by default), HuggingFace embeddings |
+| **Email** | Brevo |
 
-### 1. Clone Repository
+---
+
+## Getting started
+
+### What you need
+
+- Node.js 20 or newer
+- Docker (for Redis and Qdrant)
+- A MongoDB database (local or MongoDB Atlas)
+- A Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
+
+### 1. Clone the project
+
 ```bash
 git clone https://github.com/Suwalkya-ji/BuildPilot.git
 cd BuildPilot
 ```
 
-### 2. Start Redis & Qdrant via Docker
+### 2. Start Redis and Qdrant
+
 ```bash
 docker compose up -d redis qdrant
 ```
 
-### 3. Setup Server Environment & Start Backend
+### 3. Start the backend
+
 ```bash
 cd server
-cp .env.example .env
-# Open .env and add your MONGODB_URI, GEMINI_API_KEY, HF_API_KEY, and BREVO_API_KEY
-
+cp .env.example .env     # then fill in your keys (see below)
 npm install
 npm run dev
 ```
 
-### 4. Setup Client Environment & Start Frontend
+The backend runs at `http://localhost:8000` and also runs the generation worker.
+
+### 4. Start the frontend
+
+In a new terminal:
+
 ```bash
-# In a new terminal window
 cd client
 cp .env.example .env
-
 npm install
 npm run dev
 ```
 
-The frontend will run on `http://localhost:5173` and backend on `http://localhost:8000`.
+Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🐳 Running with Docker (Production Mode)
+## Running an exported project
 
-You can run the entire stack (Redis, Qdrant, Express Server, and Worker) in Docker with a single command:
+Click **Export ZIP** in the workspace, then:
 
 ```bash
-# Ensure server/.env has your production environment variables set
+unzip my-project.zip
+cd my-project
+npm install
+npm run dev
+```
+
+---
+
+## Running with Docker
+
+To run everything (Redis, Qdrant and the app) in production mode:
+
+```bash
 docker compose up --build -d
 ```
 
-Access the unified application at `http://localhost:8000`.
+Then open `http://localhost:8000`.
 
 ---
 
-## 🔑 Environment Variables Reference
+## Environment variables
 
-### Backend (`server/.env`)
-| Variable | Description | Default / Example |
-| :--- | :--- | :--- |
-| `PORT` | Server HTTP listening port | `8000` |
-| `NODE_ENV` | Environment (`development` / `production`) | `development` |
-| `MONGODB_URI` | MongoDB connection string | Required |
-| `JWT_SECRET` | Secret key for signing JWT tokens | Required |
-| `GEMINI_API_KEY` | Google Gemini API Key | Required |
-| `HF_API_KEY` | HuggingFace API Token | Required |
-| `BREVO_API_KEY` | Brevo Email & SMTP API Key | Required for Email OTP |
-| `BREVO_SMTP_USER` | Brevo SMTP Account Email | Optional |
-| `SENDER_EMAIL` | Sender Email Address for OTPs | `noreply@buildpilot.ai` |
-| `SENDER_NAME` | Sender Display Name | `"BuildPilot AI"` |
-| `REDIS_HOST` | Redis host | `127.0.0.1` |
-| `REDIS_PORT` | Redis port | `6379` |
-| `QDRANT_URL` | Qdrant Vector DB URL | `http://localhost:6333` |
+### Backend — `server/.env`
 
-### Frontend (`client/.env`)
-| Variable | Description | Default |
+| Variable | What it's for | Example |
 | :--- | :--- | :--- |
-| `VITE_API_BASE_URL` | Express API endpoint | `http://localhost:8000/api/v1` |
-| `VITE_SOCKET_URL` | Express Socket.IO endpoint | `http://localhost:8000` |
+| `MONGODB_URI` | MongoDB connection | **required** |
+| `JWT_SECRET` | Signs login tokens | **required** |
+| `GEMINI_API_KEY` | Google Gemini access | **required** |
+| `HF_API_KEY` | HuggingFace embeddings | **required** |
+| `BREVO_API_KEY` | Sends verification emails | **required** for email codes |
+| `GEMINI_MODEL` | Which Gemini model to use | `gemini-3.8-flash` |
+| `JWT_EXPIRE` | How long a login lasts | `7d` |
+| `PORT` | Backend port | `8000` |
+| `NODE_ENV` | `development` or `production` | `development` |
+| `CLIENT_URL` | Frontend address(es) allowed to connect | `http://localhost:5173` |
+| `REDIS_HOST` / `REDIS_PORT` | Redis connection | `127.0.0.1` / `6379` |
+| `QDRANT_URL` | Qdrant connection | `http://localhost:6333` |
+| `BREVO_SMTP_USER` | Brevo SMTP login | optional |
+| `SENDER_EMAIL` / `SENDER_NAME` | "From" address on emails | `noreply@yourdomain.com` / `BuildPilot AI` |
+
+### Frontend — `client/.env`
+
+| Variable | What it's for | Example |
+| :--- | :--- | :--- |
+| `VITE_API_BASE_URL` | Backend API address | `http://localhost:8000/api/v1` |
+| `VITE_SOCKET_URL` | Backend live-updates address | `http://localhost:8000` |
 
 ---
+
+## Project structure
+
+```text
+BuildPilot/
+├── client/                 Frontend (React)
+│   ├── public/             Static files (favicon)
+│   └── src/
+│       ├── api/            Calls to the backend
+│       ├── components/     UI pieces (landing, auth, dashboard, workspace)
+│       ├── context/        Login and theme state
+│       ├── hooks/          Reusable hooks (live updates, auth)
+│       ├── layouts/        Page layouts
+│       ├── pages/          Screens
+│       ├── utils/          Preview builder and ZIP export
+│       └── index.css       Colors, fonts and animations
+├── server/                 Backend (Express)
+│   └── src/
+│       ├── config/         Database, Redis, Qdrant and Socket.IO setup
+│       ├── controllers/    Request handlers
+│       ├── lib/            Gemini client
+│       ├── middleware/     Auth, validation and errors
+│       ├── models/         Database schemas
+│       ├── routes/         API routes
+│       ├── services/       AI, search, email and project logic
+│       ├── sockets/        Live-update connections
+│       └── workers/        Background generation worker
+└── docker-compose.yml      Redis, Qdrant and app containers
+```
+
+---
+
+## Notes
+
+- The job queue dashboard is at `http://localhost:8000/admin/queues` in development only.
+- Live-update connections require a login, and users can only see their own projects.
