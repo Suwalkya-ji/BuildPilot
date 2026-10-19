@@ -7,7 +7,7 @@ BuildPilot AI is a full-stack, state-of-the-art web application that leverages g
 ## ✨ Features
 
 - **🤖 AI-Driven Site Generation**: Uses Groq AI to generate structured React components and HTML/CSS styling based on user prompts.
-- **⚡ Live Interactive Preview**: Embedded CodeSandbox Sandpack engine for real-time live preview of generated code directly in the browser.
+- **⚡ Live Interactive Preview**: Instant in-browser preview of generated code in the workspace (iframe + Babel), plus a full-screen Sandpack preview page.
 - **🎨 Premium Dual Theme & Responsive UI**: Custom "Rosewood & Slate" Light Mode Theme + Dark Mode toggle with responsive mobile viewport IDE layouts.
 - **🔐 Secure Auth & Email OTP**: JWT Authentication with `bcrypt` password hashing, 6-digit OTP verification, and Email Password Reset via Brevo SMTP.
 - **🔄 Async Queue Processing**: Heavy AI generation tasks are queued using **BullMQ** and **Redis** for resilient, non-blocking performance.
@@ -60,8 +60,7 @@ BuildPilot/
 │   │   ├── models/             # Mongoose schemas (User, Project, Otp, PasswordReset)
 │   │   ├── routes/             # API routes (/api/v1/auth, /projects, /ai)
 │   │   ├── services/           # AI, Embedding, Email, Qdrant & Generation services
-│   │   └── workers/            # BullMQ background workers
-│   ├── worker.js               # Standalone worker process entry point
+│   │   └── workers/            # BullMQ worker (runs inside the server process)
 │   ├── Dockerfile              # Multi-stage production container recipe
 │   └── .env.example            # Server environment variable template
 ├── docker-compose.yml          # Full-stack multi-container Docker compose

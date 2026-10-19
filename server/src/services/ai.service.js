@@ -3,6 +3,7 @@ import Project from "../models/project.model.js";
 import ApiError from "../utils/ApiError.js";
 import { parseAIResponse } from "../utils/aiResponseParser.js";
 import { searchRelevantFiles } from "./rag.service.js";
+import { reindexProjectFiles } from "./vector.service.js";
 
 /**
  * ==========================================
@@ -189,6 +190,9 @@ Return the COMPLETE updated files array containing ALL files (including src/App.
 
     project.status = "completed";
     await project.save();
+
+    // Keep chat context in sync with the new files (runs in background)
+    reindexProjectFiles(project._id.toString(), project.generatedFiles);
 
     return project;
   } catch (error) {

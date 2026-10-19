@@ -54,18 +54,9 @@ app.use(
   })
 );
 
-helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "'unsafe-eval'",
-      ]
-    }
-  }
-})
+// Security headers. CSP is off because the app loads the editor and
+// preview runtime (React, Babel, Tailwind) from public CDNs.
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // Use "combined" Apache-style logs in production, "dev" colorized logs in development
 app.use(morgan(isProduction ? "combined" : "dev"));
@@ -76,7 +67,10 @@ const limiter = rateLimit({
   message: "Too many requests, try again later.",
 });
 
-app.use(limiter);
+// Limit only auth (brute force) and AI (costly) routes; project routes
+// are polled every few seconds by the workspace during generation.
+app.use("/api/v1/auth", limiter);
+app.use("/api/v1/ai", limiter);
 
 /*
 ===========================
@@ -104,7 +98,10 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/ai", aiRoutes);
 
-app.use("/admin/queues", bullBoard.getRouter());
+// Queue dashboard has no login, so only expose it in development
+if (!isProduction) {
+  app.use("/admin/queues", bullBoard.getRouter());
+}
 
 /*
 ===========================

@@ -1,5 +1,9 @@
 import Project from "../models/project.model.js";
 import ApiError from "../utils/ApiError.js";
+import {
+  reindexProjectFiles,
+  deleteProjectVectors,
+} from "./vector.service.js";
 
 export const createProjectService = async (data, userId) => {
   const project = await Project.create({
@@ -50,6 +54,11 @@ export const updateProjectService = async (
     throw new ApiError(404, "Project not found");
   }
 
+  // Manual edits change the files, so refresh chat context (runs in background)
+  if (data.generatedFiles) {
+    reindexProjectFiles(project._id.toString(), project.generatedFiles);
+  }
+
   return project;
 };
 
@@ -66,5 +75,6 @@ export const deleteProjectService = async (
     throw new ApiError(404, "Project not found");
   }
 
-  return;
+  // Remove the project's indexed files too
+  deleteProjectVectors(project._id.toString()).catch(() => {});
 };

@@ -9,6 +9,7 @@ export const useSocket = (projectId, onStatusUpdate) => {
   useEffect(() => {
     socketRef.current = io(SOCKET_URL, {
       transports: ["websocket", "polling"],
+      auth: { token: localStorage.getItem("token") },
     });
 
     socketRef.current.on("connect", () => {
