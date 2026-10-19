@@ -5,6 +5,7 @@ import ThemeToggle from "../common/ThemeToggle";
 import StatusBadge from "../common/StatusBadge";
 import JSZip from "jszip";
 import { toast } from "sonner";
+import { buildExportFiles, exportFileName } from "../../utils/exportProject";
 
 const WorkspaceHeader = ({ projectTitle, status, onSave, isSaving, files = [], isFilesOpen, onToggleFiles }) => {
   const [isExporting, setIsExporting] = useState(false);
@@ -13,29 +14,15 @@ const WorkspaceHeader = ({ projectTitle, status, onSave, isSaving, files = [], i
     if (!files || files.length === 0) return;
     setIsExporting(true);
     try {
+      // Wrap everything in one folder so it unzips cleanly as a runnable project
       const zip = new JSZip();
-      files.forEach((f) => {
-        let p = (f.path || f.filePath || "").trim().replace(/^\//, "");
-        if (p) zip.file(p, f.content || "");
+      const folderName = exportFileName(projectTitle).replace(/\.zip$/, "");
+      buildExportFiles(files, projectTitle).forEach((f) => {
+        zip.file(`${folderName}/${f.path}`, f.content);
       });
 
-      if (!files.some(f => (f.path || f.filePath || "").includes("package.json"))) {
-        zip.file("package.json", JSON.stringify({
-          name: (projectTitle || "buildpilot-project").toLowerCase().replace(/[^a-z0-9]/g, "-"),
-          private: true,
-          version: "1.0.0",
-          type: "module",
-          dependencies: {
-            react: "^18.2.0",
-            "react-dom": "^18.2.0",
-            "lucide-react": "^0.263.1",
-            tailwindcss: "^3.3.0"
-          }
-        }, null, 2));
-      }
-
       const content = await zip.generateAsync({ type: "blob" });
-      const filename = `${(projectTitle || "buildpilot-project").toLowerCase().replace(/[^a-z0-9]/g, "-")}-codebase.zip`;
+      const filename = exportFileName(projectTitle);
 
       const link = document.createElement("a");
       link.href = URL.createObjectURL(content);
