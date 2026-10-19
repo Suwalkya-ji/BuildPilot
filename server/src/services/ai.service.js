@@ -1,4 +1,4 @@
-import groq from "../lib/groq.js";
+import { generateJSON } from "../lib/gemini.js";
 import Project from "../models/project.model.js";
 import ApiError from "../utils/ApiError.js";
 import { parseAIResponse } from "../utils/aiResponseParser.js";
@@ -11,13 +11,10 @@ import { reindexProjectFiles } from "./vector.service.js";
  * ==========================================
  */
 export const generateWebsiteService = async (prompt) => {
-  const completion = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    response_format: { type: "json_object" },
-    messages: [
-      {
-        role: "system",
-        content: `
+  const aiResponse = await generateJSON([
+    {
+      role: "system",
+      content: `
 You are an expert React.js and Tailwind CSS developer generating code for a Sandpack in-browser preview.
 
 Generate a complete React project.
@@ -56,15 +53,13 @@ STRICT RULES — FOLLOW EXACTLY:
 11. For interactive features (auth, CRUD, forms), use React useState/localStorage — no backend calls.
 12. Every file object must have: path, content, type, language fields.
 `,
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
+    },
+    {
+      role: "user",
+      content: prompt,
+    },
+  ]);
 
-  const aiResponse = completion.choices[0].message.content;
   const parsedResponse = parseAIResponse(aiResponse);
 
   const summaryText = `I have generated your MERN & React application with ${parsedResponse.files.length} modular files (${parsedResponse.files.map(f => f.path.split("/").pop()).join(", ")}). You can inspect the code in Monaco Editor or test it live in Preview.`;
@@ -168,13 +163,7 @@ Return the COMPLETE updated files array containing ALL files (including src/App.
       },
     ];
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" },
-      messages,
-    });
-
-    const aiResponse = completion.choices[0].message.content;
+    const aiResponse = await generateJSON(messages);
     const parsedResponse = parseAIResponse(aiResponse);
 
     if (parsedResponse && parsedResponse.files && parsedResponse.files.length > 0) {

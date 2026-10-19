@@ -23,11 +23,11 @@ const steps = [
     step: "2",
     icon: Bot,
     title: "AI & Vector RAG",
-    description: "Groq AI generates multi-file code while Qdrant vectors index your codebase context.",
+    description: "Google Gemini generates multi-file code while Qdrant vectors index your codebase context.",
     illustration: (
       <div className="flex flex-col justify-between h-24 rounded-xl bg-[#090b10] border border-indigo-500/40 p-3 shadow-inner font-mono text-[10px]">
         <div className="flex items-center justify-between">
-          <span className="text-purple-400 font-semibold">Groq + Qdrant</span>
+          <span className="text-purple-400 font-semibold">Gemini + Qdrant</span>
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
         </div>
         <div className="grid grid-cols-2 gap-1.5">

@@ -1,12 +1,12 @@
 # 🚀 BuildPilot AI — AI-Powered Website Builder & Code Generator
 
-BuildPilot AI is a full-stack, state-of-the-art web application that leverages generative AI (Groq LLMs & HuggingFace embeddings) and vector retrieval (Qdrant) to turn natural language prompts into complete, interactive web applications with real-time streaming updates and live browser preview.
+BuildPilot AI is a full-stack, state-of-the-art web application that leverages generative AI (Google Gemini & HuggingFace embeddings) and vector retrieval (Qdrant) to turn natural language prompts into complete, interactive web applications with real-time streaming updates and live browser preview.
 
 ---
 
 ## ✨ Features
 
-- **🤖 AI-Driven Site Generation**: Uses Groq AI to generate structured React components and HTML/CSS styling based on user prompts.
+- **🤖 AI-Driven Site Generation**: Uses Google Gemini to generate structured React components and HTML/CSS styling based on user prompts.
 - **⚡ Live Interactive Preview**: Instant in-browser preview of generated code in the workspace (iframe + Babel), plus a full-screen Sandpack preview page.
 - **🎨 Premium Dual Theme & Responsive UI**: Custom "Rosewood & Slate" Light Mode Theme + Dark Mode toggle with responsive mobile viewport IDE layouts.
 - **🔐 Secure Auth & Email OTP**: JWT Authentication with `bcrypt` password hashing, 6-digit OTP verification, and Email Password Reset via Brevo SMTP.
@@ -34,7 +34,7 @@ BuildPilot AI is a full-stack, state-of-the-art web application that leverages g
 - **Queue System**: BullMQ + Redis (`ioredis`)
 - **Vector Database**: Qdrant Vector DB
 - **Email Service**: Brevo API & SMTP (`nodemailer`)
-- **AI Integrations**: Groq SDK (`llama-3.3-70b-versatile`), HuggingFace Inference (`all-MiniLM-L6-v2`)
+- **AI Integrations**: Google Gen AI SDK (Gemini, default `gemini-3.8-flash`), HuggingFace Inference (`all-MiniLM-L6-v2`)
 - **Real-Time Engine**: Socket.IO
 
 ---
@@ -91,7 +91,7 @@ docker compose up -d redis qdrant
 ```bash
 cd server
 cp .env.example .env
-# Open .env and add your MONGODB_URI, GROQ_API_KEY, HF_API_KEY, and BREVO_API_KEY
+# Open .env and add your MONGODB_URI, GEMINI_API_KEY, HF_API_KEY, and BREVO_API_KEY
 
 npm install
 npm run dev
@@ -133,7 +133,7 @@ Access the unified application at `http://localhost:8000`.
 | `NODE_ENV` | Environment (`development` / `production`) | `development` |
 | `MONGODB_URI` | MongoDB connection string | Required |
 | `JWT_SECRET` | Secret key for signing JWT tokens | Required |
-| `GROQ_API_KEY` | Groq AI API Key | Required |
+| `GEMINI_API_KEY` | Google Gemini API Key | Required |
 | `HF_API_KEY` | HuggingFace API Token | Required |
 | `BREVO_API_KEY` | Brevo Email & SMTP API Key | Required for Email OTP |
 | `BREVO_SMTP_USER` | Brevo SMTP Account Email | Optional |

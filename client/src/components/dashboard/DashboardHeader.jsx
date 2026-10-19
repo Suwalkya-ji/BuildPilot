@@ -40,7 +40,7 @@ const DashboardHeader = ({ onCreateClick, projectCount = 0 }) => {
           <div>
             <p className="text-[11px] font-bold text-slate-400 font-mono uppercase tracking-wider">AI Engine Status</p>
             <p className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> Groq Llama 3.3 Active
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> Gemini Active
             </p>
           </div>
         </div>
