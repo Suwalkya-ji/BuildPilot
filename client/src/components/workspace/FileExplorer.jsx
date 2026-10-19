@@ -11,39 +11,36 @@ const FileExplorer = ({ files = [], activeFile, onSelectFile, onClose }) => {
   });
 
   return (
-    <div className="flex h-full flex-col bg-[#11141f] border-r border-white/10 select-none">
-      {/* Header FILES with Close Arrow */}
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-300">
-        <span>FILES</span>
+    <aside className="flex h-full flex-col gap-1.5 bg-surface px-2.5 py-3.5 select-none" aria-label="Project files">
+      <div className="flex items-center justify-between pl-1.5 pb-1">
+        <span className="eyebrow">Files</span>
         <button
+          type="button"
           onClick={onClose}
-          title="Collapse Files Sidebar"
-          aria-label="Collapse Files Sidebar"
-          className="rounded p-1 text-slate-400 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+          title="Collapse files panel"
+          aria-label="Collapse files panel"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-muted transition-colors hover:bg-tint hover:text-fg"
         >
           <ChevronsLeft className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Search Input Box */}
-      <div className="p-3 border-b border-white/10">
-        <div className="relative flex items-center">
-          <Search className="absolute left-3 h-3.5 w-3.5 text-slate-500" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search files..."
-            className="w-full rounded-xl bg-[#090b10] border border-white/10 pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none font-mono"
-          />
-        </div>
-      </div>
+      <label className="mb-1 flex h-[34px] items-center gap-2 rounded-[10px] border border-line bg-bg px-2.5 text-muted transition-colors focus-within:border-accent">
+        <Search className="h-[13px] w-[13px] shrink-0" aria-hidden="true" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search files"
+          aria-label="Search files"
+          className="min-w-0 flex-1 bg-transparent text-xs text-fg outline-none placeholder:text-muted"
+        />
+      </label>
 
-      {/* File Tree List */}
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="-mx-1 flex-1 overflow-y-auto px-1">
         <FileTree files={filteredFiles} activeFile={activeFile} onSelectFile={onSelectFile} />
       </div>
-    </div>
+    </aside>
   );
 };
 

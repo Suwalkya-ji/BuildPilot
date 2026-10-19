@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { Sparkles, Bot, MessageSquare, MoreHorizontal } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 
@@ -22,40 +22,42 @@ const ChatPanel = ({ messages = [], onSendMessage, isLoading }) => {
   });
 
   return (
-    <div className="flex h-full flex-col bg-[#11141f] border-t border-white/10 select-none">
-      {/* Header BUILDER AI matching Image 2 */}
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-200">
-        <div className="flex items-center gap-2">
-          <MessageSquare className="h-3.5 w-3.5 text-cyan-400" /> BUILDER AI
-        </div>
-        <MoreHorizontal className="h-4 w-4 text-slate-400 cursor-pointer hover:text-white" />
+    <section className="flex h-full flex-col bg-surface" aria-label="AI builder">
+      <div className="flex h-11 shrink-0 items-center border-b border-line px-3.5">
+        <span className="eyebrow">AI builder</span>
       </div>
 
-      {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 font-mono">
+      <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-3.5 py-4" aria-live="polite">
         {cleanMessages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 p-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 text-white shadow-md mb-3">
-              <Bot className="h-5 w-5" />
+          <div className="flex h-full flex-col items-center justify-center p-6 text-center">
+            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-icon-tile text-icon-ink">
+              <Sparkles className="h-5 w-5" />
             </div>
-            <p className="text-xs font-bold text-white">How do I assist your MERN build?</p>
-            <p className="mt-1 text-[11px] text-slate-400">Ask to add components, charts, or backend state.</p>
+            <p className="font-display text-xl leading-snug text-fg">How can I help with your build?</p>
+            <p className="mt-1 text-[13px] text-muted">Ask to add components, pages, charts or state.</p>
           </div>
         ) : (
           cleanMessages.map((msg, idx) => <MessageBubble key={idx} message={msg} />)
         )}
 
         {isLoading && (
-          <div className="flex items-center gap-2 text-xs text-cyan-300 font-mono bg-cyan-500/10 border border-cyan-400/30 rounded-xl p-3">
-            <Sparkles className="h-3.5 w-3.5 animate-spin text-cyan-400" /> Generating code update via Qdrant RAG...
+          <div
+            className="anim-msg inline-flex items-center gap-2.5 self-start rounded-full bg-warn-bg px-3.5 py-2.5 text-[12.5px] font-medium text-warn-fg"
+            role="status"
+          >
+            <span className="inline-flex gap-1" aria-hidden="true">
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+              <span className="typing-dot" />
+            </span>
+            Updating your code…
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* RAG Prompt Input Box matching Image 2 */}
       <ChatInput onSend={onSendMessage} isLoading={isLoading} />
-    </div>
+    </section>
   );
 };
 

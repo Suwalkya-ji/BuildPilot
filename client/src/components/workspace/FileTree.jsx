@@ -1,31 +1,33 @@
-import { FileCode2 } from "lucide-react";
-
 const FileItem = ({ path, activeFile, onSelect }) => {
   const isActive = activeFile === path;
   const fileName = path.split("/").pop();
 
   return (
-    <div
+    <button
+      type="button"
       onClick={() => onSelect(path)}
-      className={`flex items-center gap-2 rounded-lg px-2 py-1 text-xs cursor-pointer select-none transition ${
-        isActive
-          ? "bg-indigo-600/20 text-indigo-300 font-medium border border-indigo-500/30"
-          : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+      title={path}
+      aria-current={isActive ? "true" : undefined}
+      className={`flex min-h-[34px] w-full items-center gap-2 rounded-[10px] px-2.5 text-left font-mono text-[12.5px] transition-[background-color,color,transform] duration-200 hover:translate-x-[3px] ${
+        isActive ? "bg-icon-tile font-semibold text-fg" : "text-muted hover:text-fg"
       }`}
     >
-      <FileCode2 className={`h-3.5 w-3.5 ${isActive ? "text-indigo-400" : "text-slate-500"}`} />
+      <span
+        aria-hidden="true"
+        className={`h-1.5 w-1.5 shrink-0 rounded-[2px] ${isActive ? "bg-accent" : "bg-line-strong"}`}
+      />
       <span className="truncate">{fileName}</span>
-    </div>
+    </button>
   );
 };
 
 const FileTreeSkeleton = () => {
   return (
-    <div className="space-y-2 p-2 font-mono animate-pulse">
+    <div className="space-y-2 py-1" aria-hidden="true">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="flex items-center gap-2 rounded-lg px-2 py-1.5 bg-white/5 border border-white/5">
-          <div className="h-3.5 w-3.5 bg-white/10 rounded" />
-          <div className={`h-3 bg-white/10 rounded ${i % 2 === 0 ? "w-24" : "w-16"}`} />
+        <div key={i} className="flex h-[34px] items-center gap-2 px-2.5">
+          <div className="shimmer h-1.5 w-1.5 rounded-[2px] bg-tint" />
+          <div className={`shimmer h-2.5 rounded bg-tint ${i % 2 === 0 ? "w-24" : "w-16"}`} />
         </div>
       ))}
     </div>
@@ -49,7 +51,7 @@ const FileTree = ({ files = [], activeFile, onSelectFile }) => {
   const uniqueFiles = Array.from(uniqueFilesMap.values());
 
   return (
-    <div className="space-y-0.5 p-2 font-mono">
+    <div className="flex flex-col gap-0.5">
       {uniqueFiles.map((file) => {
         const filePath = file.path || file.filePath;
         return (

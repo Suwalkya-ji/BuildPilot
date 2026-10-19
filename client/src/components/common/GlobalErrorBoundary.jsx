@@ -23,37 +23,39 @@ class GlobalErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0b0d13] p-6 text-slate-100 select-none">
-          <div className="max-w-md w-full rounded-3xl border border-rose-500/30 bg-[#131722]/90 p-8 shadow-2xl backdrop-blur-2xl text-center space-y-6">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400">
-              <AlertTriangle className="h-7 w-7" />
+        <div className="relative flex min-h-screen items-center justify-center overflow-x-clip bg-bg p-6 text-fg">
+          <div
+            aria-hidden="true"
+            className="orb orb-drift-1 -left-20 -top-[120px] h-[360px] w-[360px]"
+            style={{ background: "var(--orb-1)" }}
+          />
+          <div className="card anim-up relative w-full max-w-md space-y-6 p-8 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-err-bg text-err-fg">
+              <AlertTriangle className="h-7 w-7" aria-hidden="true" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl font-extrabold text-white tracking-tight">Something Went Wrong</h2>
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <h2 className="font-display text-4xl font-normal leading-none">Something went wrong</h2>
+              <p className="text-sm leading-relaxed text-muted">
                 BuildPilot AI encountered an unexpected application error. You can refresh the page or return home.
               </p>
             </div>
 
             {this.state.error && (
-              <div className="rounded-xl bg-[#090b10] border border-white/10 p-3 text-left font-mono text-[11px] text-rose-300 max-h-32 overflow-y-auto whitespace-pre-wrap">
+              <div
+                role="alert"
+                className="max-h-32 overflow-y-auto whitespace-pre-wrap rounded-xl border border-line bg-editor p-3 text-left font-mono text-[11px] text-err-fg"
+              >
                 {this.state.error.message || String(this.state.error)}
               </div>
             )}
 
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <button
-                onClick={this.handleReset}
-                className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg hover:shadow-rose-500/25 transition active:scale-95"
-              >
-                <RefreshCw className="h-3.5 w-3.5" /> Reload Page
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <button type="button" onClick={this.handleReset} className="btn btn-primary h-11 px-5">
+                <RefreshCw className="h-4 w-4" aria-hidden="true" /> Reload page
               </button>
-              <a
-                href="/dashboard"
-                className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-xs font-bold text-slate-300 hover:bg-white/10 transition active:scale-95"
-              >
-                <Home className="h-3.5 w-3.5" /> Dashboard
+              <a href="/dashboard" className="btn btn-ghost h-11 px-5">
+                <Home className="h-4 w-4" aria-hidden="true" /> Dashboard
               </a>
             </div>
           </div>

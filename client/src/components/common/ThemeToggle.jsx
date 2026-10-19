@@ -9,17 +9,11 @@ const ThemeToggle = ({ className = "" }) => {
     <button
       onClick={toggleTheme}
       type="button"
-      className={`nav-glow-btn ${className}`}
-      title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}
-      aria-label="Toggle Theme"
+      className={`btn btn-icon ${className}`}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
-      <span className="nav-glow-btn-inner !px-2.5 !py-1.5">
-        {isDark ? (
-          <Sun className="h-4 w-4 text-amber-400 transition-transform duration-300 hover:rotate-45" />
-        ) : (
-          <Moon className="h-4 w-4 text-indigo-400 transition-transform duration-300 hover:-rotate-12" />
-        )}
-      </span>
+      {isDark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
     </button>
   );
 };
