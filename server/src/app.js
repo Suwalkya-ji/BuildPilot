@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -94,6 +95,11 @@ Routes
 ===========================
 */
 
+// Used by Render's health check
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({ success: true, status: "ok" });
+});
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/ai", aiRoutes);
@@ -117,10 +123,11 @@ Production: Serve React Build
 ===========================
 */
 
-if (isProduction) {
-  // Point to the Vite build output folder
-  const clientBuildPath = path.join(__dirname, "../../client/dist");
+// Point to the Vite build output folder. It only exists in the all-in-one
+// Docker image; when the frontend is hosted separately (Vercel) it's skipped.
+const clientBuildPath = path.join(__dirname, "../../client/dist");
 
+if (isProduction && fs.existsSync(clientBuildPath)) {
   // Serve static assets (JS, CSS, images) from the dist folder
   app.use(express.static(clientBuildPath));
 

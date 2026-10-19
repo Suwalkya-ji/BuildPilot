@@ -165,7 +165,9 @@ Then open `http://localhost:8000`.
 | `NODE_ENV` | `development` or `production` | `development` |
 | `CLIENT_URL` | Frontend address(es) allowed to connect | `http://localhost:5173` |
 | `REDIS_HOST` / `REDIS_PORT` | Redis connection | `127.0.0.1` / `6379` |
+| `REDIS_URL` | Full Redis URL, used instead of host/port | `redis://red-xxxx:6379` |
 | `QDRANT_URL` | Qdrant connection | `http://localhost:6333` |
+| `QDRANT_API_KEY` | Qdrant Cloud API key | only for Qdrant Cloud |
 | `BREVO_SMTP_USER` | Brevo SMTP login | optional |
 | `SENDER_EMAIL` / `SENDER_NAME` | "From" address on emails | `noreply@yourdomain.com` / `BuildPilot AI` |
 
