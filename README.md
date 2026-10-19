@@ -136,57 +136,9 @@ npm run dev
 
 ---
 
-## Deployment (Vercel + Render)
-
-The frontend runs on **Vercel** and the backend on **Render**. The backend needs a server that stays running (live updates and the AI job queue), so it can't run on Vercel.
-
-| Part | Where | Cost |
-| :--- | :--- | :--- |
-| Frontend (`client/`) | Vercel | Free |
-| Backend API + worker (`server/`) | Render web service | Free (sleeps when idle) or Starter |
-| Redis | Render Key Value | Free |
-| MongoDB | MongoDB Atlas | Free tier |
-| Vector database | Qdrant Cloud | Free tier |
-
-### 1. Create the databases
-
-1. **MongoDB Atlas** — create a free cluster and a database user. Under *Network Access*, allow `0.0.0.0/0` (Render's IP addresses change). Copy the connection string.
-2. **Qdrant Cloud** — create a free cluster. Copy its **URL** and **API key**.
-
-### 2. Deploy the backend on Render
-
-1. In Render, choose **New → Blueprint** and select this repository. Render reads `render.yaml` and creates the API (`buildpilot-api`) and Redis (`buildpilot-redis`).
-2. Fill in the values it asks for: `MONGODB_URI`, `GEMINI_API_KEY`, `HF_API_KEY`, `QDRANT_URL`, `QDRANT_API_KEY`, `BREVO_API_KEY`, `BREVO_SMTP_USER`, `SENDER_EMAIL`. Leave `CLIENT_URL` empty for now.
-3. When it's live, open `https://<your-api>.onrender.com/api/v1/health` — it should show `"status":"ok"`.
-
-### 3. Deploy the frontend on Vercel
-
-1. In Vercel, choose **Add New → Project** and import this repository.
-2. Set **Root Directory** to `client` (Vercel detects Vite automatically).
-3. Add these environment variables, using your Render URL:
-
-   | Variable | Value |
-   | :--- | :--- |
-   | `VITE_API_BASE_URL` | `https://<your-api>.onrender.com/api/v1` |
-   | `VITE_SOCKET_URL` | `https://<your-api>.onrender.com` |
-
-4. Deploy and copy your Vercel URL (e.g. `https://buildpilot.vercel.app`).
-
-### 4. Connect the two
-
-In Render, set `CLIENT_URL` on `buildpilot-api` to your Vercel URL (no trailing slash) and save — Render redeploys. The site is now live at your Vercel URL.
-
-**Good to know**
-
-- On Render's free plan the backend sleeps after 15 minutes without traffic; the first request after that takes about a minute. Switch the service to **Starter** to keep it always on.
-- If you change `VITE_*` variables in Vercel, redeploy the frontend — they're baked in at build time.
-- For a custom domain, add it in Vercel and update `CLIENT_URL` on Render to match.
-
----
-
 ## Running with Docker
 
-To run everything (Redis, Qdrant and the app) on one machine in production mode:
+To run everything (Redis, Qdrant and the app) in production mode:
 
 ```bash
 docker compose up --build -d
@@ -213,7 +165,7 @@ Then open `http://localhost:8000`.
 | `NODE_ENV` | `development` or `production` | `development` |
 | `CLIENT_URL` | Frontend address(es) allowed to connect | `http://localhost:5173` |
 | `REDIS_HOST` / `REDIS_PORT` | Redis connection | `127.0.0.1` / `6379` |
-| `REDIS_URL` | Full Redis URL, used instead of host/port (Render) | `redis://red-xxxx:6379` |
+| `REDIS_URL` | Full Redis URL, used instead of host/port | `redis://red-xxxx:6379` |
 | `QDRANT_URL` | Qdrant connection | `http://localhost:6333` |
 | `QDRANT_API_KEY` | Qdrant Cloud API key | only for Qdrant Cloud |
 | `BREVO_SMTP_USER` | Brevo SMTP login | optional |
