@@ -5,9 +5,11 @@ import { normalizeSandpackFiles } from "../utils/previewBuilder";
 import { SandpackProvider, SandpackPreview } from "@codesandbox/sandpack-react";
 import Loader from "../components/common/Loader";
 import Logo from "../components/common/Logo";
+import { useTheme } from "../context/ThemeContext";
 
 const PreviewPage = () => {
   const { projectId } = useParams();
+  const { theme } = useTheme();
 
   const { data: projectRes, isLoading, isError } = useQuery({
     queryKey: ["project", projectId],
@@ -23,16 +25,16 @@ const PreviewPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0b0d13]">
-        <Loader text="Preparing Live Web Preview..." />
+      <div className="flex h-screen items-center justify-center bg-bg">
+        <Loader text="Preparing live preview…" />
       </div>
     );
   }
 
   if (isError || !project) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0b0d13] text-rose-400 text-xs">
-        Failed to load project preview.
+      <div className="flex h-screen items-center justify-center bg-bg p-4">
+        <div className="alert-error" role="alert">Failed to load project preview.</div>
       </div>
     );
   }
@@ -41,27 +43,26 @@ const PreviewPage = () => {
   const sandpackFiles = normalizeSandpackFiles(files);
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-[#0b0d13] text-slate-100 overflow-hidden">
-      {/* Top Banner */}
-      <header className="flex h-12 items-center justify-between border-b border-white/10 bg-[#131722] px-6 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <Logo />
-          <span className="text-white/30">|</span>
-          <span className="text-xs font-bold text-white font-mono">
-            {project.title} — Fullscreen Preview
-          </span>
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-bg text-fg">
+      <header className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-line bg-surface px-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <Logo className="shrink-0" />
+          <span className="hidden h-5 w-px shrink-0 bg-line sm:block" aria-hidden="true" />
+          <h1 className="hidden min-w-0 truncate font-mono text-xs text-muted sm:block">
+            <span className="text-fg">{project.title}</span> — Fullscreen preview
+          </h1>
         </div>
-        <div className="text-[11px] text-cyan-400 font-bold bg-cyan-500/10 border border-cyan-400/30 px-3 py-1 rounded-full">
-          Live Sandbox
-        </div>
+        <span className="badge badge-ready shrink-0">
+          <span className="badge-dot anim-pulse" />
+          Live sandbox
+        </span>
       </header>
 
-      {/* Sandpack Fullscreen Preview */}
       <div className="flex-1 overflow-hidden">
         {files.length > 0 ? (
           <SandpackProvider
             template="react"
-            theme="dark"
+            theme={theme === "dark" ? "dark" : "light"}
             files={sandpackFiles}
             options={{
               externalResources: ["https://cdn.tailwindcss.com"],
@@ -77,9 +78,9 @@ const PreviewPage = () => {
             />
           </SandpackProvider>
         ) : (
-          <div className="flex h-full items-center justify-center flex-col gap-3 text-slate-500 text-xs font-mono">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
-            <span>AI is generating your website...</span>
+          <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-muted" role="status">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+            <span>AI is generating your website…</span>
           </div>
         )}
       </div>

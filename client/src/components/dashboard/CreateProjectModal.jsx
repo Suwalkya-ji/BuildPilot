@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { X, Sparkles } from "lucide-react";
+import { X } from "lucide-react";
 
 const CreateProjectModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [framework, setFramework] = useState("react");
+  const [framework] = useState("react");
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -24,77 +24,70 @@ const CreateProjectModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 select-none"
+      className="anim-fade fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-scrim p-4 pt-[10vh] sm:p-6 sm:pt-[12vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="create-modal-title"
     >
-      <div className="w-full max-w-lg rounded-2xl border border-white/20 bg-[#131722] p-6 shadow-2xl backdrop-blur-2xl">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-cyan-400 animate-pulse" />
-            <h2 id="create-modal-title" className="text-base font-extrabold text-white">Create New MERN Project</h2>
-          </div>
-          <button onClick={onClose} aria-label="Close modal" className="text-slate-400 hover:text-white transition p-1 rounded-lg hover:bg-white/10">
-            <X className="h-5 w-5" />
+      <div className="card anim-pop w-full max-w-[520px] rounded-[22px] p-6 shadow-[0_30px_80px_rgba(0,0,0,0.3)] sm:p-7">
+        <div className="flex items-center justify-between gap-4">
+          <h2 id="create-modal-title" className="font-display text-[32px] leading-tight text-fg">
+            New project
+          </h2>
+          <button type="button" onClick={onClose} aria-label="Close modal" className="btn btn-icon">
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-left">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Project Name</label>
+        <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4 text-left">
+          <div className="label">
+            <label htmlFor="project-title">Project name</label>
             <input
+              id="project-title"
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. AI E-Commerce SaaS Store"
-              className="w-full rounded-xl bg-[#0b0d13] border border-white/15 px-4 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none transition font-medium"
+              placeholder="e.g. Portfolio Site"
+              className="field h-[46px]"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Description (Optional)</label>
+          <div className="label">
+            <label htmlFor="project-description">Description (optional)</label>
             <input
+              id="project-description"
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Short description of your website"
-              className="w-full rounded-xl bg-[#0b0d13] border border-white/15 px-4 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none transition font-medium"
+              className="field h-[46px]"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Initial AI Prompt</label>
+          <div className="label">
+            <label htmlFor="project-prompt">What should the AI build?</label>
             <textarea
-              rows={3}
+              id="project-prompt"
+              rows={4}
               required
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe the MERN & React website you want AI to generate..."
-              className="w-full rounded-xl bg-[#0b0d13] border border-white/15 px-4 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none transition font-medium"
+              placeholder="A portfolio site with a dark hero, projects grid and contact form"
+              className="field"
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Framework</label>
-            <div className="w-full rounded-xl bg-[#0b0d13] border border-white/15 px-4 py-2.5 text-xs text-slate-300 font-semibold flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-cyan-400" />
-              MERN Stack (React 18 + Tailwind CSS)
-            </div>
-          </div>
+          <span className="inline-flex h-[30px] items-center self-start rounded-full bg-icon-tile px-3 font-mono text-xs text-fg">
+            React 18 + Tailwind CSS
+          </span>
 
-          <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-white/10">
-            <button type="button" onClick={onClose} className="nav-glow-btn">
-              <span className="nav-glow-btn-inner bg-white/10 px-5 py-2 text-xs font-bold text-slate-300">
-                Cancel
-              </span>
+          <div className="flex flex-wrap justify-end gap-2.5 pt-1">
+            <button type="button" onClick={onClose} className="btn btn-ghost h-[46px] px-5">
+              Cancel
             </button>
-
-            <button type="submit" disabled={isSubmitting} className="nav-glow-btn">
-              <span className="nav-glow-btn-inner bg-gradient-to-r from-cyan-400 via-indigo-500 to-fuchsia-500 px-6 py-2 text-xs font-bold text-white">
-                {isSubmitting ? "Creating..." : "Create & Start IDE"}
-              </span>
+            <button type="submit" disabled={isSubmitting} className="btn btn-primary h-[46px] px-[22px]">
+              {isSubmitting ? "Creating..." : "Create & open IDE"}
             </button>
           </div>
         </form>

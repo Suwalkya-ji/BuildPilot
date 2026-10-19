@@ -58,3 +58,16 @@ export const deleteProjectVectors = async (projectId) => {
     throw error;
   }
 };
+// Replace all indexed files of a project with the given files.
+// Errors are logged, never thrown, so indexing can't break a request.
+export const reindexProjectFiles = async (projectId, files = []) => {
+  try {
+    await deleteProjectVectors(projectId);
+
+    for (const file of files) {
+      await indexProjectFile(projectId, file.path, file.content);
+    }
+  } catch (error) {
+    console.error(`[Vector] Reindex failed for project ${projectId}:`, error.message);
+  }
+};

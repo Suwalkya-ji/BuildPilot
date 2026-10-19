@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 import { getProjectsApi, createProjectApi, deleteProjectApi } from "../api/project.api";
 import { generateWebsiteApi } from "../api/ai.api";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
@@ -10,6 +11,7 @@ import CreateProjectModal from "../components/dashboard/CreateProjectModal";
 import DeleteProjectDialog from "../components/dashboard/DeleteProjectDialog";
 import EmptyState from "../components/common/EmptyState";
 import Container from "../components/common/Container";
+import { formatRelativeTime } from "../components/dashboard/relativeTime";
 
 const Dashboard = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -25,6 +27,13 @@ const Dashboard = () => {
   });
 
   const projects = projectsRes?.data || projectsRes || [];
+
+  // Most recent updatedAt across projects, for the "Last updated" stat
+  const latestUpdate = projects.reduce((latest, p) => {
+    const t = new Date(p?.updatedAt).getTime();
+    return Number.isFinite(t) && t > latest ? t : latest;
+  }, 0);
+  const lastUpdated = latestUpdate ? formatRelativeTime(latestUpdate) : "—";
 
   // Create Project & Trigger AI Generation Mutation
   const createMutation = useMutation({
@@ -63,13 +72,17 @@ const Dashboard = () => {
   });
 
   return (
-    <Container>
-      <DashboardHeader onCreateClick={() => setIsCreateOpen(true)} projectCount={projects.length} />
+    <Container size="large">
+      <DashboardHeader
+        onCreateClick={() => setIsCreateOpen(true)}
+        projectCount={projects.length}
+        lastUpdated={lastUpdated}
+      />
 
       {isLoading ? (
         <ProjectGrid isLoading={true} />
       ) : isError ? (
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-center text-xs text-red-400">
+        <div className="alert-error p-6 text-center" role="alert">
           Failed to load projects: {error?.response?.data?.message || error?.message || "Server Error"}
         </div>
       ) : projects.length === 0 ? (
@@ -77,11 +90,9 @@ const Dashboard = () => {
           title="No projects created yet"
           description="Click the button below to generate your first React website with AI."
           action={
-            <button
-              onClick={() => setIsCreateOpen(true)}
-              className="rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 transition"
-            >
-              + Create First Project
+            <button type="button" onClick={() => setIsCreateOpen(true)} className="btn btn-primary h-12 px-[22px] text-[15px]">
+              <Plus className="btn-spin h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
+              Create first project
             </button>
           }
         />

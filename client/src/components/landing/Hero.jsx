@@ -1,95 +1,131 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, MousePointer } from "lucide-react";
-import Container from "../common/Container";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+
+const codeLines = [
+  {
+    delay: "0.8s",
+    indent: "",
+    content: (
+      <>
+        <span className="text-code-key">export default</span> <span className="text-code-fn">function</span> App() {"{"}
+      </>
+    ),
+  },
+  { delay: "1.05s", indent: "pl-4", content: (<><span className="text-code-key">return</span> (</>) },
+  { delay: "1.3s", indent: "pl-8 text-code-tag", content: "<Hero />" },
+  { delay: "1.55s", indent: "pl-8 text-code-tag", content: "<Projects />" },
+  {
+    delay: "1.8s",
+    indent: "pl-8 text-code-tag",
+    content: (
+      <>
+        {"<Contact />"}
+        <span className="anim-blink ml-0.5 inline-block h-[15px] w-[7px] bg-accent align-[-2px]" />
+      </>
+    ),
+  },
+  { delay: "2.05s", indent: "pl-4", content: ");" },
+  { delay: "2.3s", indent: "", content: "}" },
+];
 
 const Hero = () => {
   const { isAuthenticated } = useAuth();
   const ctaTarget = isAuthenticated ? "/dashboard" : "/signup";
-  const ctaLabel = isAuthenticated ? "Open Dashboard" : "Start Building Free";
+  const ctaLabel = isAuthenticated ? "Open dashboard" : "Start building free";
 
   return (
-    <section className="py-8 md:py-12">
-      <Container>
-        {/* Main Hero Card Frame matching reference image */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-hero-card p-8 sm:p-12 md:p-16 shadow-2xl border border-white/20">
-          {/* Subtle Ambient Glow inside Card */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 h-96 w-96 rounded-full bg-cyan-400/20 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 -mb-20 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl" />
+    <section className="flex flex-wrap items-center gap-14 pb-[72px] pt-10 md:pt-16">
+      <div className="flex min-w-0 flex-[1_1_440px] flex-col gap-7">
+        <span className="anim-up d1 inline-flex h-[30px] items-center gap-2 self-start rounded-full border border-line bg-surface px-3.5 text-[13px] text-muted">
+          <span className="anim-pulse h-[7px] w-[7px] rounded-full bg-accent" aria-hidden="true" />
+          Powered by Google Gemini
+        </span>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-            {/* Left Column Text Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl leading-tight">
-                Build Web Apps <br />
-                at Speed of AI.
-              </h1>
+        <h1 className="anim-up d2 font-display text-5xl font-normal leading-none tracking-[-0.01em] sm:text-6xl lg:text-[76px]">
+          Build web apps at the speed of{" "}
+          <span className="rotate-words text-accent-ink">
+            <em>thought.</em>
+            <em>words.</em>
+            <em>your ideas.</em>
+          </span>
+        </h1>
 
-              <p className="max-w-xl text-sm sm:text-base text-cyan-100/90 leading-relaxed font-medium">
-                No Code. Just Flow. Launch Your App in Minutes with Intelligent Automation & Full-Stack MERN Code Generation.
-              </p>
+        <p className="anim-up d3 max-w-[520px] text-base leading-relaxed text-muted sm:text-lg">
+          Describe your app in plain English. Get a full React + Tailwind project with live preview, a code
+          editor and an AI pair-builder — in minutes.
+        </p>
 
-              <div className="pt-4 flex flex-wrap items-center gap-4">
-                <Link to={ctaTarget} className="nav-glow-btn">
-                  <span className="nav-glow-btn-inner bg-gradient-to-r from-fuchsia-500 via-indigo-500 to-cyan-400 px-7 py-3 text-sm text-white">
-                    {ctaLabel} <ArrowRight className="h-4 w-4 ml-1.5 inline" />
-                  </span>
-                </Link>
-                <a href="#how-it-works" className="nav-glow-btn">
-                  <span className="nav-glow-btn-inner bg-white/10 px-6 py-3 text-sm text-white">
-                    Watch Demo
-                  </span>
-                </a>
+        <div className="anim-up d4 flex max-w-[540px] items-center gap-2.5 rounded-full border border-line-strong bg-surface py-2 pl-[18px] pr-2 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+          <Sparkles className="h-4 w-4 shrink-0 text-accent-ink" aria-hidden="true" />
+          <span className="min-w-0 flex-1 overflow-hidden whitespace-nowrap font-mono text-[13.5px] text-fg">
+            <span className="type-loop max-w-[calc(100%-12px)]">a portfolio with a dark hero and contact form</span>
+            <span
+              className="anim-blink ml-0.5 inline-block h-4 w-[7px] bg-accent align-[-3px]"
+              aria-hidden="true"
+            />
+          </span>
+          <Link to={ctaTarget} className="btn btn-primary shine h-[42px] shrink-0 px-[18px]">
+            Generate
+            <ArrowRight className="btn-arrow h-[15px] w-[15px]" aria-hidden="true" />
+          </Link>
+        </div>
+
+        <div className="anim-up d5 flex flex-wrap gap-3">
+          <Link to={ctaTarget} className="btn btn-brand h-12 px-[22px] text-[15px]">
+            {ctaLabel}
+          </Link>
+          <a href="#workflow" className="btn btn-outline h-12 px-[22px] text-[15px]">
+            See how it works
+          </a>
+        </div>
+      </div>
+
+      <div className="anim-up d3 min-w-0 flex-[1_1_480px]" aria-hidden="true">
+        <div className="anim-float">
+          <div
+            className="anim-tilt rounded-[20px] bg-hero-panel p-2.5 sm:p-3.5"
+            style={{ boxShadow: "var(--shadow-hero)" }}
+          >
+            <div className="overflow-hidden rounded-xl border border-line bg-surface">
+              <div className="flex items-center gap-2 border-b border-line px-3.5 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-line" />
+                <span className="h-2.5 w-2.5 rounded-full bg-line" />
+                <span className="h-2.5 w-2.5 rounded-full bg-line" />
+                <span className="ml-2 truncate font-mono text-xs text-muted">portfolio-site / src/App.jsx</span>
               </div>
-            </div>
-
-            {/* Right Column Glassmorphic Component Wireframe Preview */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative rounded-2xl border border-white/25 bg-white/10 p-5 backdrop-blur-2xl shadow-2xl">
-                {/* Header Window Dots */}
-                <div className="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
-                  <div className="flex gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
-                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-                  </div>
-                  <span className="text-[10px] font-mono text-cyan-200/70">App Canvas</span>
+              <div className="grid grid-cols-2">
+                <div className="overflow-hidden border-r border-line bg-editor p-3 font-mono text-[11px] leading-[1.8] sm:p-[18px] sm:text-[12.5px]">
+                  {codeLines.map((line, i) => (
+                    <div key={i} className={`code-line whitespace-nowrap ${line.indent}`} style={{ animationDelay: line.delay }}>
+                      {line.content}
+                    </div>
+                  ))}
                 </div>
-
-                {/* Wireframe Mockup Nodes */}
-                <div className="space-y-3 font-mono text-xs">
+                <div className="flex flex-col gap-2.5 p-3 sm:p-[18px]">
+                  <div className="pop-in h-16 rounded-[10px] bg-brand" style={{ animationDelay: "1.4s" }} />
                   <div className="grid grid-cols-3 gap-2">
-                    <div className="h-16 rounded-xl border border-cyan-400/40 bg-cyan-500/20 p-2 flex flex-col justify-between">
-                      <div className="h-2 w-8 bg-cyan-300/60 rounded" />
-                      <div className="h-4 w-4 rounded-full bg-cyan-400/80" />
-                    </div>
-                    <div className="col-span-2 h-16 rounded-xl border border-fuchsia-400/40 bg-fuchsia-500/20 p-2.5">
-                      <div className="h-2 w-16 bg-fuchsia-300/60 rounded mb-2" />
-                      <div className="h-2 w-24 bg-white/40 rounded" />
-                    </div>
+                    {["1.7s", "1.85s", "2s"].map((d) => (
+                      <div key={d} className="pop-in h-12 rounded-lg bg-tint" style={{ animationDelay: d }} />
+                    ))}
                   </div>
-
-                  <div className="h-24 rounded-xl border border-indigo-400/40 bg-indigo-500/20 p-3 relative overflow-hidden">
-                    <div className="h-2.5 w-20 bg-indigo-300/70 rounded mb-3" />
-                    <div className="h-2 w-32 bg-white/30 rounded" />
-                    {/* Simulated Cursor Pointer */}
-                    <div className="absolute right-4 bottom-4 flex items-center gap-1 text-cyan-300 text-[10px]">
-                      <MousePointer className="h-4 w-4 fill-cyan-400 stroke-cyan-200 animate-bounce" />
-                    </div>
-                  </div>
+                  <div className="pop-in h-2.5 w-[70%] rounded-md bg-tint" style={{ animationDelay: "2.2s" }} />
+                  <div className="pop-in h-2.5 w-1/2 rounded-md bg-tint" style={{ animationDelay: "2.3s" }} />
+                  <div className="pop-in h-[26px] w-[92px] self-start rounded-full bg-accent" style={{ animationDelay: "2.5s" }} />
                 </div>
-
-                {/* Caption Badge */}
-                <div className="mt-3 text-center">
-                  <span className="text-[11px] font-medium text-cyan-200/80 bg-black/30 px-3 py-1 rounded-full border border-white/10">
-                    AI-generated app preview
-                  </span>
-                </div>
+              </div>
+              <div className="flex items-center gap-2.5 border-t border-line px-3.5 py-3 text-[13px] text-muted">
+                <span className="anim-pulse h-2 w-2 shrink-0 rounded-full bg-accent" />
+                <span className="rotate-words min-w-0">
+                  <span>AI: “Added a contact form with validation.”</span>
+                  <span>AI: “Made the hero background darker.”</span>
+                  <span>AI: “Linked your LinkedIn profile.”</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 };
